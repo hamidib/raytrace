@@ -293,6 +293,53 @@ vector<Ray> jig(float camWidth, float camHeight, float pixelSize, glm::vec3 camC
     return myRays;
 }
 
+
+bool quadratic (float a, float b, float c, float x0, float x1) 
+{ 
+    float discr = b * b - 4 * a * c; 
+    if (discr < 0) return false; 
+    else if (discr == 0) x0 = x1 = - 0.5 * b / a; 
+    else { 
+        float q = (b > 0) ? 
+            -0.5 * (b + sqrt(discr)) : 
+            -0.5 * (b - sqrt(discr)); 
+        x0 = q / a; 
+        x1 = c / q; 
+    } 
+    if (x0 > x1) std::swap(x0, x1); 
+ 
+    return true; 
+}
+
+
+
+//code/psuedo code for intersect of ray and sphere either we save the intercept to the depth file here or change the return type
+bool Group :: intercept ( glm::vec3 myRay, glm::vec3 dir, float r, float t){  //r=radius
+    float t0, t1;
+    float mult = -2.0;
+    float R = r * r;                                                     // radius^2
+    float a = glm::dot( dir , dir );                                     //where a = x^2 
+    
+                                                                     //for element we need to traverse the array of rays to do all these for each ray
+       
+    //glm::vec3 b0 = mult * dot(myRay * dir);                                       //where b = bx  
+    float b = mult * dot(myRay , dir); 
+    float c = (-1* R ) + glm::dot( myRay, myRay );                    //where c = c //r = radius //element = ray in vector container  
+    
+    if( !quadratic( a, b, c, t0, t1 ) ) return false;
+    if (t0 > t1) {                                       //the intercept that applies is the closest intercept
+        std::swap( t0, t1);
+    } 
+    if (t0 < 0) {
+        t0 = t1;                                         //if i0 is negative, then use i1
+        if (t0 < 0)                                      //if i1 is also negative, return false 
+        return false;
+    }
+    t= t0;    
+    return true;
+
+}
+
 /*
 Ray rayFactory(vector<glm::vec3> jiggy, glm::vec3 camDirection)
 {
@@ -315,11 +362,13 @@ Ray rayFactory(vector<glm::vec3> jiggy, glm::vec3 camDirection)
 int main( int argc, char **argv ){
 	string pathStr;
 	gProgramName = argv[0];
+	float myIntercept;
 
 	Camera myCam;
 	glm::vec3 myColor = glm::vec3(0, 0, 0); // color
 	glm::vec3 myDiffuseColor = glm::vec3(0, 0, 0);
 	Group myGroup;
+	
 
 	parseCommandLine( argc, argv );
 	argc -= optind;
@@ -331,13 +380,15 @@ int main( int argc, char **argv ){
 		cout << *gTheScene << endl;	
 		//raytrace();
 		//vector<glm::vec3> myRays = rayFactory(jig(myCam._width, myCam._height, 1, myCam._center),myCam._direction);
-		vector<Ray> myRays = jig(myCam._width, myCam._height, 1, myCam._center, myCam._direction);
+		vector<Ray> myRays = jig(myCam._width, myCam._height, myGroup._radius, myCam._center, myCam._direction);
 		int rayCount = 0;
 		for(Ray element : myRays) //check rays 
     	{
     		glm::vec3 myEle = element.returnPoint();
       		cout << glm::to_string(myEle) << endl; //Ray object must refence private var inside to print
+      		cout << "Intercept: " << myGroup.intercept(myEle, myCam._direction, myGroup._radius , myIntercept) <<endl;
       		cout << "The Vector Orgins" << endl;
+      		
       		rayCount++;
     	}
     	cout <<"Ray Count " <<rayCount <<endl;

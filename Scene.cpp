@@ -9,6 +9,7 @@
 
 #include "Scene.h"
 #include <string>
+#include "string.h"
 //#include <algorithm>
 //#include <vector>
 //#include <iterator>
