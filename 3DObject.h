@@ -22,27 +22,28 @@ class _3DObject
 
 		//code for quadratic formula
 
-bool quadratic(float &a, float &b, float &c, float &x0, float &x1) 
-{ 
-    float discr = b * b - 4 * a * c; 
-    if (discr < 0) return false; 
-    else if (discr == 0) x0 = x1 = - 0.5 * b / a; 
-    else { 
-        float q = (b > 0) ? 
-            -0.5 * (b + sqrt(discr)) : 
-            -0.5 * (b - sqrt(discr)); 
-        x0 = q / a; 
-        x1 = c / q; 
-    } 
-    if (x0 > x1) std::swap(x0, x1); 
- 
-    return true; 
-}
+   bool quadratic (float a, float b, float c, float x0, float x1) 
+	{ 
+	    float discr = b * b - 4 * a * c; 
+	    if (discr < 0) return false; 
+	    else if (discr == 0) x0 = x1 = - 0.5 * b / a; 
+	    else { 
+		float q = (b > 0) ? 
+		    -0.5 * (b + sqrt(discr)) : 
+		    -0.5 * (b - sqrt(discr)); 
+		x0 = q / a; 
+		x1 = c / q; 
+	    } 
+	    if (x0 > x1) std::swap(x0, x1); 
+	 
+	    return true; 
+	}
 
 
+//3D object class can own the quadratic formula for the baby classes to inherit...a sphere sub class will have the sphere intercept
 
 //code/psuedo code for intersect of ray and sphere either we save the intercept to the depth file here or change the return type
-bool intersect ( vector<glm::vec3> myRays, glm::vec3 dir, float rad){
+/*bool intersect ( vector<glm::vec3> myRays, glm::vec3 dir, float rad){
     float i0, i1;
     float R = r * r;                                                     // radius^2
     float a = glm::dot( dir , dir );                                     //where a = x^2 
@@ -65,7 +66,22 @@ bool intersect ( vector<glm::vec3> myRays, glm::vec3 dir, float rad){
         return true;
     }
 
-}
+}*/
+
+};
+
+class sphere::_3DObject{
+	public:
+           glm::vec3 _center;
+	   float _radius;
+           sphere( ){};
+
+	   sphere( ){};
+	   
+	   bool intercept(glm::vec3 , glm::vec3 , float , float );
+
+	   ~sphere( ){};
+
 
 };
 #endif
