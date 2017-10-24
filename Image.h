@@ -44,6 +44,7 @@ class Image {
 public:
   inline Image( int x_res, int y_res );
   inline ~Image( ) { delete[] pixels; }
+  inline void colorPixel(int xPosition, int yPosition, glm::vec3 colorPixel); // color an idividual pixel
   inline GLubyte* read( const char *file_name );
   inline bool write( const char *file_name );
   inline Pixel &operator()( int i, int j ) { return *( pixels + ( i * width + j ) ); }  
@@ -58,6 +59,15 @@ inline Image::Image( int x_res, int y_res ){
   pixels = new Pixel[ width * height ];
   Pixel *p = pixels;
   for( int i = 0; i < width * height; i++ ) *p++ = Pixel(0,0,0);
+}
+inline void Image::colorPixel(int xPosition, int yPosition, glm::vec3 colorPixel) //color the pixel - not working right
+{
+  width  = xPosition;
+  height = yPosition;
+  pixels = new Pixel[ width * height ];
+  Pixel *p = pixels;
+  *p = Pixel(colorPixel.x,colorPixel.y,colorPixel.z);
+  //Pixel(width, height)
 }
 
 inline GLubyte* Image::read( const char *file_name ){

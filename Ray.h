@@ -35,6 +35,16 @@ public:
 		return _p;
 	}
 
+	int returnX()
+	{
+		return _i;
+	}
+
+	int returnY()
+	{
+		return _j;
+	}
+
 
 };
 #endif

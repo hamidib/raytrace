@@ -232,9 +232,9 @@ void parseCommandLine( int argc, char **argv ){
 	gTheScene = new Scene( inputFile, outputFile, depthFile );
 }
 //make jig2 with vector - norm(direction) then use this in rayfactory
-vector<Ray> jig(float camWidth, float camHeight, float pixelSize, glm::vec3 camCenter, glm::vec3 camDirection)//(float camera.width, float camera.height, float pixelSize, vec3 camera.center)
+vector<Ray> jig(float camWidth, float camHeight, float pixelSize, glm::vec3 camCenter, glm::vec3 camDirection, float &totalWidth, float &totalHeight)//(float camera.width, float camera.height, float pixelSize, vec3 camera.center)
 {
-    float totalWidth, totalHeight;
+    //float totalWidth, totalHeight;
 
  	if (pixelSize > camHeight)
         totalHeight = 1;
@@ -369,6 +369,7 @@ int main( int argc, char **argv ){
 	glm::vec3 myDiffuseColor = glm::vec3(0, 0, 0);
 	Group myGroup;
 	
+    float totalHeight = 0, totalWidth = 0; //size of pixel frame image
 
 	parseCommandLine( argc, argv );
 	argc -= optind;
@@ -380,18 +381,21 @@ int main( int argc, char **argv ){
 		cout << *gTheScene << endl;	
 		//raytrace();
 		//vector<glm::vec3> myRays = rayFactory(jig(myCam._width, myCam._height, 1, myCam._center),myCam._direction);
-		vector<Ray> myRays = jig(myCam._width, myCam._height, myGroup._radius, myCam._center, myCam._direction);
+		vector<Ray> myRays = jig(myCam._width, myCam._height, myGroup._radius, myCam._center, myCam._direction, totalWidth, totalHeight);
 		int rayCount = 0;
+        Image myImage(totalWidth, totalHeight); //check this
 		for(Ray element : myRays) //check rays 
     	{
     		glm::vec3 myEle = element.returnPoint();
       		cout << glm::to_string(myEle) << endl; //Ray object must refence private var inside to print
       		cout << "Intercept: " << myGroup.intercept(myEle, myCam._direction, myGroup._radius , myIntercept) <<endl;
-      		cout << "The Vector Orgins" << endl;
-      		
+      		cout << "Image Pixel Orgins" << endl;
+            cout << element.returnX() << " "<<element.returnY() << endl;
+      		myImage.colorPixel(rayCount, rayCount, glm::vec3(0,0,1));//myImage.colorPixel(element.returnX(), element.returnY(), glm::vec3(1,1,1));//must use intercept and pixel color
       		rayCount++;
     	}
     	cout <<"Ray Count " <<rayCount <<endl;
+        myImage.write("sphere.jpg");
 
 	}else{
 		usage( "You specify an input scene file, an output file and a depth file." );
