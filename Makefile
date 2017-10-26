@@ -26,7 +26,8 @@ endif
 # or  your code off: CFLAGS += -g -Wall -pipe $(INCLUDES)
 #
 CFLAGS += -std=c++11 -g -Wall -pedantic -pipe $(INCLUDES)
-LDFLAGS += -g -Wall -pipe $(LDINCLUDES) -lfreeimage -lfreeimageplus
+LDFLAGS += -g -Wall -pipe $(LDINCLUDES)
+LLDLIBS += -lfreeimageplus
 
 TARGET = raytrace
 # C Files
