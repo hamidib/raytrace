@@ -15,8 +15,8 @@ ifeq ($(OSNAME), Darwin)
 INCLUDES += -I ./TitanOpenGLKit/include
 LDINCLUDES += -L ./TitanOpenGLKit/lib
 else
-#INCLUDES += 
-LDINCLUDES += -L /usr/lib/x86_64-linux-gnu/libfreeimage.so
+INCLUDES += -I /usr/include
+LDINCLUDES += -L /usr/lib/x86_64-linux-gnu
 endif
 
 #
