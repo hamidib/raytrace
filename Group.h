@@ -10,6 +10,9 @@
 #ifndef _GROUP_H_
 #define _GROUP_H_
 
+#include <vector>
+#include "glm/glm.hpp"
+
 class Group{
 public:
 	float _numObjects;
@@ -29,8 +32,10 @@ public:
   //member functions for intercept---> will have to move to obj class
 
   
-  friend bool quadratic(float , float , float , float , float );
-  bool intercept(glm::vec3 , glm::vec3 , float , float );
+  friend bool quadratic(float a, float b, float c, float x0, float x1);
+  bool intercept(glm::vec3 myRay, glm::vec3 dir, glm::vec3 myCenter, float r, float t );
+
+  //bool intercept2(glm::vec3, glm::vec3);
 
   Group& operator=(Group& g)
   {

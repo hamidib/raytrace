@@ -164,6 +164,7 @@ int main( int argc, char **argv ){
 
 #include <iostream>
 #include <string>
+#include "Group.h"
 #include "getopt.h"
 #include "Scene.h"
 #include "Ray.h"
@@ -259,15 +260,17 @@ vector<Ray> jig(float camWidth, float camHeight, float pixelSize, glm::vec3 camC
     	glm::vec3 startPT = glm::vec3( camCenter.x - (totalWidth/2) + (pixelSize/2) , 
         camCenter.y + (totalHeight/2) - (pixelSize/2),
         camCenter.z);
-
+        int pixPos = 0;
     	for (int i = 0; i < totalWidth; i++){
         	for (int j = 0; j < totalHeight; j++)
         	{
             	rayOrigin = glm::vec3(startPT.x + i*pixelSize , startPT.x + j*pixelSize , camCenter.z); 
-				myRays.push_back(Ray(rayOrigin, camDirection, rayOrigin.x, rayOrigin.y));//this is the ray factory now
+
+				myRays.push_back(Ray(rayOrigin, camDirection, pixPos/totalWidth, pixPos%(int)totalWidth));//this is the ray factory now
+                pixPos++;
        		}
     	}
-    }else
+    }else //ODD NOT WORKING
     {
     	glm::vec3 startPT = glm::vec3( camCenter.x, 
         camCenter.y + (totalHeight/2) - (pixelSize/2),
@@ -282,6 +285,8 @@ vector<Ray> jig(float camWidth, float camHeight, float pixelSize, glm::vec3 camC
         	{
 
             	rayOrigin = glm::vec3(startPT.x + i , j, camCenter.z); 
+                //l-> l/w, l%w
+                //#
 				myRays.push_back(Ray(rayOrigin, camDirection, rayOrigin.x, rayOrigin.y));//this is the ray factory now
 
 				rayOrigin = glm::vec3(startPT.x - i , j, camCenter.z); 
@@ -294,51 +299,10 @@ vector<Ray> jig(float camWidth, float camHeight, float pixelSize, glm::vec3 camC
 }
 
 
-bool quadratic (float a, float b, float c, float x0, float x1) 
-{ 
-    float discr = b * b - 4 * a * c; 
-    if (discr < 0) return false; 
-    else if (discr == 0) x0 = x1 = - 0.5 * b / a; 
-    else { 
-        float q = (b > 0) ? 
-            -0.5 * (b + sqrt(discr)) : 
-            -0.5 * (b - sqrt(discr)); 
-        x0 = q / a; 
-        x1 = c / q; 
-    } 
-    if (x0 > x1) std::swap(x0, x1); 
- 
-    return true; 
-}
 
 
 
-//code/psuedo code for intersect of ray and sphere either we save the intercept to the depth file here or change the return type
-bool Group :: intercept ( glm::vec3 myRay, glm::vec3 dir, float r, float t){  //r=radius
-    float t0, t1;
-    float mult = -2.0;
-    float R = r * r;                                                     // radius^2
-    float a = glm::dot( dir , dir );                                     //where a = x^2 
-    
-                                                                     //for element we need to traverse the array of rays to do all these for each ray
-       
-    //glm::vec3 b0 = mult * dot(myRay * dir);                                       //where b = bx  
-    float b = mult * dot(myRay , dir); 
-    float c = (-1* R ) + glm::dot( myRay, myRay );                    //where c = c //r = radius //element = ray in vector container  
-    
-    if( !quadratic( a, b, c, t0, t1 ) ) return false;
-    if (t0 > t1) {                                       //the intercept that applies is the closest intercept
-        std::swap( t0, t1);
-    } 
-    if (t0 < 0) {
-        t0 = t1;                                         //if i0 is negative, then use i1
-        if (t0 < 0)                                      //if i1 is also negative, return false 
-        return false;
-    }
-    t= t0;    
-    return true;
 
-}
 
 /*
 Ray rayFactory(vector<glm::vec3> jiggy, glm::vec3 camDirection)
@@ -383,21 +347,30 @@ int main( int argc, char **argv ){
 		//vector<glm::vec3> myRays = rayFactory(jig(myCam._width, myCam._height, 1, myCam._center),myCam._direction);
         vector<Ray> myRays = jig(myCam._width, myCam._height, myGroup._radius, myCam._center, myCam._direction, totalWidth, totalHeight);
         int rayCount = 0, hit = 0;
+        cout << gTheScene->outputFile().c_str() <<endl;
         PNGImage myImage(gTheScene->outputFile( ).c_str( ), totalWidth, totalHeight); //check this
         for(Ray element : myRays) //check rays 
         {
             glm::vec3 myEle = element.returnPoint();
             cout << glm::to_string(myEle) << endl; //Ray object must refence private var inside to print
-            cout << "Intercept: " << myGroup.intercept(myEle, myCam._direction, myGroup._radius , myIntercept) <<endl;
+            cout << "Intercept: " << myGroup.intercept(myEle, myCam._direction, myGroup._center, myGroup._radius, myIntercept) <<endl;
             cout << "Image Pixel Orgins" << endl;
             cout << element.returnX() << " "<<element.returnY() << endl;
             //myImage.colorPixel(rayCount, rayCount, glm::vec3(0,0,1));//myImage.colorPixel(element.returnX(), element.returnY(), glm::vec3(1,1,1));//must use intercept and pixel color
-            if(myGroup.intercept(myEle, myCam._direction, myGroup._radius , myIntercept))
+            if(myGroup.intercept(myEle, myCam._direction, myGroup._center, myGroup._radius , myIntercept))
             {
                 //myImage.pixels[rayCount++] = Pixel(0,0,0);
                 //myImage.setPixel(i, j, 255, 0, 0, 255);
-                myImage.setPixel(element.returnX() + 0.5 * totalWidth, element.returnY() + 0.5 * totalHeight,255,0,0,255);
-                cout << "image coord: " << element.returnX() * 0.5 * totalWidth << " " << 0.5 * totalHeight << endl;
+                if((int)totalHeight % 2 == 0 || (int)totalWidth % 2 == 0) 
+                {
+                    myImage.setPixel(element.returnX(),element.returnY(),255,0,0,255);
+                    cout << "X "<< element.returnX() << "Y " << element.returnY() << endl;
+                }else
+                {
+                    //myImage.setPixel(static_cast<float>(element.returnPoint().x + 0.5 * totalWidth +0.5), static_cast<float>(element.returnPoint().y + 0.5 * totalHeight) ,255,0,0,255);
+                    //cout << "img coord: "<< element.returnPoint().x + 0.5 * totalWidth +0.5 << " " << element.returnPoint().y + 0.5 * totalHeight ;
+                }
+            
                 hit++;
             }
             rayCount++;

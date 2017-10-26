@@ -31,7 +31,7 @@ LLDLIBS += -lfreeimageplus
 
 TARGET = raytrace
 # C Files
-CPPFILES = raytrace.cpp Scene.cpp
+CPPFILES = raytrace.cpp Scene.cpp Group.cpp
 CFILES = getopt_long.c
 # Headers
 HEADERS = Camera.h Group.h Hit.h Image.h Material.hRay.h Scene.h common.h getopt.h
