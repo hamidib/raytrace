@@ -259,15 +259,17 @@ vector<Ray> jig(float camWidth, float camHeight, float pixelSize, glm::vec3 camC
     	glm::vec3 startPT = glm::vec3( camCenter.x - (totalWidth/2) + (pixelSize/2) , 
         camCenter.y + (totalHeight/2) - (pixelSize/2),
         camCenter.z);
-
+        int pixPos = 0;
     	for (int i = 0; i < totalWidth; i++){
         	for (int j = 0; j < totalHeight; j++)
         	{
             	rayOrigin = glm::vec3(startPT.x + i*pixelSize , startPT.x + j*pixelSize , camCenter.z); 
-				myRays.push_back(Ray(rayOrigin, camDirection, rayOrigin.x, rayOrigin.y));//this is the ray factory now
+
+				myRays.push_back(Ray(rayOrigin, camDirection, pixPos/totalWidth, pixPos%(int)totalWidth));//this is the ray factory now
+                pixPos++;
        		}
     	}
-    }else
+    }else //ODD NOT WORKING
     {
     	glm::vec3 startPT = glm::vec3( camCenter.x, 
         camCenter.y + (totalHeight/2) - (pixelSize/2),
@@ -282,6 +284,8 @@ vector<Ray> jig(float camWidth, float camHeight, float pixelSize, glm::vec3 camC
         	{
 
             	rayOrigin = glm::vec3(startPT.x + i , j, camCenter.z); 
+                //l-> l/w, l%w
+                //#
 				myRays.push_back(Ray(rayOrigin, camDirection, rayOrigin.x, rayOrigin.y));//this is the ray factory now
 
 				rayOrigin = glm::vec3(startPT.x - i , j, camCenter.z); 
@@ -383,6 +387,7 @@ int main( int argc, char **argv ){
 		//vector<glm::vec3> myRays = rayFactory(jig(myCam._width, myCam._height, 1, myCam._center),myCam._direction);
         vector<Ray> myRays = jig(myCam._width, myCam._height, myGroup._radius, myCam._center, myCam._direction, totalWidth, totalHeight);
         int rayCount = 0, hit = 0;
+        cout << gTheScene->outputFile().c_str() <<endl;
         PNGImage myImage(gTheScene->outputFile( ).c_str( ), totalWidth, totalHeight); //check this
         for(Ray element : myRays) //check rays 
         {
@@ -396,8 +401,16 @@ int main( int argc, char **argv ){
             {
                 //myImage.pixels[rayCount++] = Pixel(0,0,0);
                 //myImage.setPixel(i, j, 255, 0, 0, 255);
-                myImage.setPixel(element.returnX() + 0.5 * totalWidth, element.returnY() + 0.5 * totalHeight,255,0,0,255);
-                cout << "image coord: " << element.returnX() * 0.5 * totalWidth << " " << 0.5 * totalHeight << endl;
+                if((int)totalHeight % 2 == 0 || (int)totalWidth % 2 == 0) 
+                {
+                    myImage.setPixel(element.returnX(),element.returnY(),255,0,0,255);
+                    cout << "X "<< element.returnX() << "Y " << element.returnY() << endl;
+                }else
+                {
+                    //myImage.setPixel(static_cast<float>(element.returnPoint().x + 0.5 * totalWidth +0.5), static_cast<float>(element.returnPoint().y + 0.5 * totalHeight) ,255,0,0,255);
+                    //cout << "img coord: "<< element.returnPoint().x + 0.5 * totalWidth +0.5 << " " << element.returnPoint().y + 0.5 * totalHeight ;
+                }
+            
                 hit++;
             }
             rayCount++;
