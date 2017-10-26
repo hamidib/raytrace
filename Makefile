@@ -9,7 +9,15 @@
 # $Id: Makefile 978 2008-09-03 20:37:31Z mshafae $
 #
 
-INCLUDES += -I ~/github/TitanOpenGLKit/TitanOpenGLKit_osx/include -L ~/github/TitanOpenGLKit/TitanOpenGLKit_osx/lib
+SHELL = /bin/sh
+OSNAME ?= $(shell /usr/bin/uname -s)
+ifeq ($(OSNAME), Darwin)
+INCLUDES += -I ./TitanOpenGLKit/include
+LDINCLUDES += -L ./TitanOpenGLKit/lib
+else
+#INCLUDES += 
+#LDINCLUDES +=
+endif
 
 #
 # Add or remove the -DNDEBUG to activate or deactivate your code
@@ -17,8 +25,8 @@ INCLUDES += -I ~/github/TitanOpenGLKit/TitanOpenGLKit_osx/include -L ~/github/Ti
 # ex. your code on:  CFLAGS += -g -DNDEBUG -Wall -pipe $(INCLUDES)
 # or  your code off: CFLAGS += -g -Wall -pipe $(INCLUDES)
 #
-CFLAGS += -std=c++11 -g -DNDEBUG -Wall -pedantic -pipe $(INCLUDES)
-LDFLAGS += -g -Wall -pipe -lfreeimageplus
+CFLAGS += -std=c++11 -g -Wall -pedantic -pipe $(INCLUDES)
+LDFLAGS += -g -Wall -pipe $(LDINCLUDES) -lfreeimageplus
 
 TARGET = raytrace
 # C Files

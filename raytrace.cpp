@@ -383,7 +383,7 @@ int main( int argc, char **argv ){
 		//vector<glm::vec3> myRays = rayFactory(jig(myCam._width, myCam._height, 1, myCam._center),myCam._direction);
 		vector<Ray> myRays = jig(myCam._width, myCam._height, myGroup._radius, myCam._center, myCam._direction, totalWidth, totalHeight);
 		int rayCount = 0;
-        Image myImage(totalWidth, totalHeight); //check this
+        PNGImage myImage(gTheScene->outputFile( ).c_str( ), totalWidth, totalHeight); //check this
 		for(Ray element : myRays) //check rays 
     	{
     		glm::vec3 myEle = element.returnPoint();
@@ -394,12 +394,13 @@ int main( int argc, char **argv ){
       		//myImage.colorPixel(rayCount, rayCount, glm::vec3(0,0,1));//myImage.colorPixel(element.returnX(), element.returnY(), glm::vec3(1,1,1));//must use intercept and pixel color
       		if(myGroup.intercept(myEle, myCam._direction, myGroup._radius , myIntercept))
             {
-                myImage.pixels[rayCount++] = Pixel(0,0,0);
+                //myImage.pixels[rayCount++] = Pixel(0,0,0);
+                //myImage.setPixel(i, j, 255, 0, 0, 255);
             }
             rayCount++;
     	}
     	cout <<"Ray Count " <<rayCount <<endl;
-        myImage.write("sphere.jpg");
+        myImage.save( );
 
 	}else{
 		usage( "You specify an input scene file, an output file and a depth file." );

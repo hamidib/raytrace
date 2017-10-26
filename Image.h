@@ -43,6 +43,22 @@
 #ifndef _IMAGE_H_
 #define _IMAGE_H_
 
+typedef unsigned char channel;  
+
+class Pixel {
+public:
+  Pixel( ) { r = 0; g = 0; b = 0; };
+  Pixel( channel _r, channel _g, channel _b ) { r = _r; g = _g; b = _b; };
+  void write( std::ostream &out ) const{
+    out << "[" << r << ", " << g << ", " << b <<", " << "]";
+  };
+  channel r;
+  channel g;
+  channel b;
+};
+
+std::ostream& operator <<( std::ostream &out, const Pixel &p );
+
 //typedef RGBQUAD Pixel;
 
 class Image{
