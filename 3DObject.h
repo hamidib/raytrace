@@ -15,12 +15,13 @@
 class _3DObject
 {
 	public:
-		_3DObject(void);
+		_3DObject() = NULL;
 
-		~_3DObject(void);
+		~_3DObject(){};
         //make subclass for circles and put 3dobjects in groups
 
 		//code for quadratic formula
+
 
    bool quadratic (float a, float b, float c, float x0, float x1) 
 	{ 
@@ -70,6 +71,7 @@ class _3DObject
 
 };
 
+/*
 class sphere::_3DObject{
 	public:
            glm::vec3 _center;
@@ -84,4 +86,5 @@ class sphere::_3DObject{
 
 
 };
+*/
 #endif
