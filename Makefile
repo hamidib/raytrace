@@ -16,7 +16,7 @@ INCLUDES += -I ./TitanOpenGLKit/include
 LDINCLUDES += -L ./TitanOpenGLKit/lib
 else
 #INCLUDES += 
-#LDINCLUDES +=
+LDINCLUDES += -L /usr/lib/x86_64-linux-gnu/libfreeimage.so
 endif
 
 #
