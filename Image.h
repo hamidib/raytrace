@@ -32,14 +32,13 @@
 
 #include <iostream>
 #include <cstdlib>
-//#include <cmath>
+#include <cassert>
+#include <cmath>
 
 #include <FreeImagePlus.h>
 
 /*#undef FREEIMAGE_COLORORDER
 #define FREEIMAGE_COLORORDER FREEIMAGE_COLORORDER_BGR*/
-
-#include <GFXMath.h>
 
 #ifndef _IMAGE_H_
 #define _IMAGE_H_
@@ -118,15 +117,16 @@ public:
     _image.setPixelColor(x, y, &c);
   }
   
-  void setPixel(uint x, uint y, const RGBAColor& c){
+  /*void setPixel(uint x, uint y, const RGBAColor& c){
     RGBQUAD q;
     c.copyToRGBQuad(q);
     setPixel(x, y, c.redByte( ), c.greenByte( ), c.blueByte( ), c.alphaByte( ));
-  }
+  }*/
   
   void setGrayPixelF(uint x, uint y, float g){
     g = std::max(std::min(g, 1.0f), 0.0f);
-    BYTE _g = static_cast<BYTE>(std::round(255.0 * g));
+    double val = 255.0 * g;
+    BYTE _g = static_cast<BYTE>(std::round(val));
     setPixel(x, y, _g, _g, _g, 255);
   }
 
