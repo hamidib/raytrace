@@ -26,7 +26,7 @@ build_glfw3 ()
 pkg_graphicsdev ()
 {
   apt-get --yes install libglew-dbg libglew-dev libglew1.10 \
-  libfreeimage3 libfreeimage3-dbg libfreeimage-dev \
+  libfreeimage3 libfreeimage3-dbg libfreeimage-dev libfreeimageplus-dev \
   freeglut3 freeglut3-dbg freeglut3-dev \
   libxrandr-dev libxi-dev libx11-dev \
   mesa-utils mesa-utils-extra \
