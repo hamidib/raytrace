@@ -391,8 +391,12 @@ int main( int argc, char **argv ){
       		cout << "Intercept: " << myGroup.intercept(myEle, myCam._direction, myGroup._radius , myIntercept) <<endl;
       		cout << "Image Pixel Orgins" << endl;
             cout << element.returnX() << " "<<element.returnY() << endl;
-      		myImage.colorPixel(rayCount, rayCount, glm::vec3(0,0,1));//myImage.colorPixel(element.returnX(), element.returnY(), glm::vec3(1,1,1));//must use intercept and pixel color
-      		rayCount++;
+      		//myImage.colorPixel(rayCount, rayCount, glm::vec3(0,0,1));//myImage.colorPixel(element.returnX(), element.returnY(), glm::vec3(1,1,1));//must use intercept and pixel color
+      		if(myGroup.intercept(myEle, myCam._direction, myGroup._radius , myIntercept))
+            {
+                myImage.pixels[rayCount++] = Pixel(0,0,0);
+            }
+            rayCount++;
     	}
     	cout <<"Ray Count " <<rayCount <<endl;
         myImage.write("sphere.jpg");
