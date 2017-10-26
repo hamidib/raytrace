@@ -381,25 +381,28 @@ int main( int argc, char **argv ){
 		cout << *gTheScene << endl;	
 		//raytrace();
 		//vector<glm::vec3> myRays = rayFactory(jig(myCam._width, myCam._height, 1, myCam._center),myCam._direction);
-		vector<Ray> myRays = jig(myCam._width, myCam._height, myGroup._radius, myCam._center, myCam._direction, totalWidth, totalHeight);
-		int rayCount = 0;
+        vector<Ray> myRays = jig(myCam._width, myCam._height, myGroup._radius, myCam._center, myCam._direction, totalWidth, totalHeight);
+        int rayCount = 0, hit = 0;
         PNGImage myImage(gTheScene->outputFile( ).c_str( ), totalWidth, totalHeight); //check this
-		for(Ray element : myRays) //check rays 
-    	{
-    		glm::vec3 myEle = element.returnPoint();
-      		cout << glm::to_string(myEle) << endl; //Ray object must refence private var inside to print
-      		cout << "Intercept: " << myGroup.intercept(myEle, myCam._direction, myGroup._radius , myIntercept) <<endl;
-      		cout << "Image Pixel Orgins" << endl;
+        for(Ray element : myRays) //check rays 
+        {
+            glm::vec3 myEle = element.returnPoint();
+            cout << glm::to_string(myEle) << endl; //Ray object must refence private var inside to print
+            cout << "Intercept: " << myGroup.intercept(myEle, myCam._direction, myGroup._radius , myIntercept) <<endl;
+            cout << "Image Pixel Orgins" << endl;
             cout << element.returnX() << " "<<element.returnY() << endl;
-      		//myImage.colorPixel(rayCount, rayCount, glm::vec3(0,0,1));//myImage.colorPixel(element.returnX(), element.returnY(), glm::vec3(1,1,1));//must use intercept and pixel color
-      		if(myGroup.intercept(myEle, myCam._direction, myGroup._radius , myIntercept))
+            //myImage.colorPixel(rayCount, rayCount, glm::vec3(0,0,1));//myImage.colorPixel(element.returnX(), element.returnY(), glm::vec3(1,1,1));//must use intercept and pixel color
+            if(myGroup.intercept(myEle, myCam._direction, myGroup._radius , myIntercept))
             {
                 //myImage.pixels[rayCount++] = Pixel(0,0,0);
                 //myImage.setPixel(i, j, 255, 0, 0, 255);
+                myImage.setPixel(element.returnX() + 0.5 * totalWidth, element.returnY() + 0.5 * totalHeight,255,0,0,255);
+                cout << "image coord: " << element.returnX() * 0.5 * totalWidth << " " << 0.5 * totalHeight << endl;
+                hit++;
             }
             rayCount++;
-    	}
-    	cout <<"Ray Count " <<rayCount <<endl;
+        }
+        cout <<"Ray Count: " <<rayCount <<" hit count: " << hit<<endl;
         myImage.save( );
 
 	}else{
