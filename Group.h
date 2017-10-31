@@ -11,6 +11,7 @@
 #define _GROUP_H_
 
 #include <vector>
+#include "Ray.h"
 #include "glm/glm.hpp"
 
 class Group{
@@ -34,6 +35,7 @@ public:
   
   friend bool quadratic(float a, float b, float c, float x0, float x1);
   bool intercept(glm::vec3 myRay, glm::vec3 dir, glm::vec3 myCenter, float r, float t );
+  bool testIntersection(Ray myRay, Group sphere);
 
   //bool intercept2(glm::vec3, glm::vec3);
 

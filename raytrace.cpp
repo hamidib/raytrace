@@ -323,6 +323,7 @@ Ray rayFactory(vector<glm::vec3> jiggy, glm::vec3 camDirection)
 }
 */
 
+
 int main( int argc, char **argv ){
 	string pathStr;
 	gProgramName = argv[0];
@@ -353,11 +354,11 @@ int main( int argc, char **argv ){
         {
             glm::vec3 myEle = element.returnPoint();
             cout << glm::to_string(myEle) << endl; //Ray object must refence private var inside to print
-            cout << "Intercept: " << myGroup.intercept(myEle, myCam._direction, myGroup._center, myGroup._radius, myIntercept) <<endl;
+            cout << "Intercept: " << myGroup.intercept(element.returnPoint(), myCam._direction, myGroup._center, myGroup._radius, myIntercept) <<endl;
             cout << "Image Pixel Orgins" << endl;
             cout << element.returnX() << " "<<element.returnY() << endl;
             //myImage.colorPixel(rayCount, rayCount, glm::vec3(0,0,1));//myImage.colorPixel(element.returnX(), element.returnY(), glm::vec3(1,1,1));//must use intercept and pixel color
-            if(myGroup.intercept(myEle, myCam._direction, myGroup._center, myGroup._radius , myIntercept))
+            if(myGroup.intercept(element.returnPoint(), myCam._direction, myGroup._center, myGroup._radius , myIntercept))
             {
                 //myImage.pixels[rayCount++] = Pixel(0,0,0);
                 //myImage.setPixel(i, j, 255, 0, 0, 255);
