@@ -1,138 +1,4 @@
-/* Your Name Here
- * somebody at something dot TLD
- * CS 484
- * September 2008
- *
- * $Id: raytrace.cpp 1961 2010-02-24 08:46:53Z mshafae $
- *
- */
-
 /*
-#include <iostream>
-#include <string>
-#include "getopt.h"
-#include "Scene.h"
-#include <vector>
- int count = 0;//global counter
-
-using namespace std;
-
-Scene *gTheScene;
-string gProgramName;
-
-void usage( string message = "" ){
-	cerr << message << endl;
-	cerr << gProgramName << " -i <inputfile> -o <outputfile> -d <depthfile>" << endl;
-	cerr << "          -or-" << endl;
-	cerr << gProgramName << " --input <inputfile> --output <outputfile> --depth <depthfile>" << endl;
-	
-}
-
-std::ostream& operator <<( std::ostream &out, const Pixel &p ){
-  p.write( out );
-  return( out );
-}
-
-void parseCommandLine( int argc, char **argv ){
-	int ch;
-	string inputFile( "" ), outputFile( "" ), depthFile( "" );
-  int resolution;
-	static struct option longopts[] = {
-    { "input", required_argument, NULL, 'i' },
-    { "output", required_argument, NULL, 'o' },
-    { "depth", required_argument, NULL, 'd' },
-    { "resolution", required_argument, NULL, 'r' },
-    { "verbose", required_argument, NULL, 'v' },
-    { "help", required_argument, NULL, 'h' },
-    { NULL, 0, NULL, 0 }
-	};
-
-	while( (ch = getopt_long(argc, argv, "i:o:d:r:vh", longopts, NULL)) != -1 ){
-		switch( ch ){
-			case 'i':
-				// input file
-				inputFile = string(optarg);
-				break;
-			case 'o':
-				// image output file
-				outputFile = string(optarg);
-				break;
-			case 'd':
-				// depth output file
-				depthFile = string( optarg );
-				break;
-			case 'r':
-        resolution = atoi(optarg);
-        break;
-      case 'v':
-        // set your flag here.
-        break;
-      case 'h':
-        usage( );
-        break;
-			default:
-				// do nothing
-				break;
-		}
-	}
-	gTheScene = new Scene( inputFile, outputFile, depthFile );
-}
-
-struct Points{          //data-structure to create list of points
-	float pts[3];
-	};
-	
-//Start of raytrace code we are trying to implement
-float pixelSize = 5;
-
-void jig( float cameraWidth, float cameraHeight, float pixelSize, float offset[3] ){  //pixel size = 5 unless you find it some where
-           
-	   float totalWidth, totalHeight;
-	   Points* pt = new Points[100];
-		
- 	   if (pixelSize > cameraHeight)
-               totalHeight = 1;
-           else if(pixelSize == cameraHeight)
-                totalHeight = cameraHeight;
-           else 
-                totalHeight = cameraHeight/pixelSize;
-
-           
-           if (pixelSize > cameraWidth)
-               totalWidth = 1;
-           else if(pixelSize == cameraWidth)
-                totalWidth = cameraWidth;
-           else 
-               totalWidth = cameraWidth/pixelSize;
-               
-        for ( int i = 0; i < totalHeight; i++ )
-        {
-			for ( int j  = 0; j < totalWidth; j++)
-			{
-				pt[count].pts[0] = i + offset[0];
-				pt[count].pts[1] = j + offset[1];
-				pt[count].pts[2] = 0 + offset[2];
-				//count++;
-			}
-		}
-	
-}
-
-
-
-void rayfactory(Points p1[], Points p2[]){
-	  //change to 
-
-	  float* arrRay = new float; //generate list of rays
-	       for (int i = 0; i < count; i++){
-	           //for (int j = 0; j < sizeof(arrV2[i][j]); j++)
-	               arrRay[i]= {p2[i].pts[3] - p1[i].pts[3]};//arrV1[i][j] - arrV2[i][j]; //head - tail
-	       }
-
-}
-
-
-
 //End of implementation 
 
 int main( int argc, char **argv ){
@@ -155,13 +21,7 @@ int main( int argc, char **argv ){
 
 	return( 0 );
 }
-
-
-
 */
-
-
-
 #include <iostream>
 #include <string>
 #include "Group.h"
@@ -233,44 +93,45 @@ void parseCommandLine( int argc, char **argv ){
 	gTheScene = new Scene( inputFile, outputFile, depthFile );
 }
 //make jig2 with vector - norm(direction) then use this in rayfactory
-vector<Ray> jig(float camWidth, float camHeight, float pixelSize, glm::vec3 camCenter, glm::vec3 camDirection, float &totalWidth, float &totalHeight)//(float camera.width, float camera.height, float pixelSize, vec3 camera.center)
+vector<Ray> jig(float pixelSize, Camera myCam, Group myGroup, float &totalWidth, float &totalHeight)//float camWidth, float camHeight, float pixelSize, glm::vec3 camCenter, glm::vec3 camDirection, float &totalWidth, float &totalHeight)//(float camera.width, float camera.height, float pixelSize, vec3 camera.center)
 {
     //float totalWidth, totalHeight;
 
- 	if (pixelSize > camHeight)
+ 	if (pixelSize > myCam._height)
         totalHeight = 1;
-    else if(pixelSize == camHeight)
-        totalHeight = camHeight;
+    else if(pixelSize == myCam._height)
+        totalHeight = myCam._height;
     else 
-        totalHeight = camHeight/pixelSize;
+        totalHeight = myCam._height/pixelSize;
 
            
-    if (pixelSize > camWidth)
+    if (pixelSize > myCam._width)
         totalWidth = 1;
-    else if(pixelSize == camWidth)
-        totalWidth = camWidth;
+    else if(pixelSize == myCam._width)
+        totalWidth = myCam._width;
     else 
-        totalWidth = camWidth/pixelSize;
+        totalWidth = myCam._width/pixelSize;
     
     vector<Ray> myRays;
     glm::vec3 rayOrigin;//vector<glm::vec3> myJig; //not glm:: vector????
     //Starting Point
-    if((int)totalHeight % 2 == 0 || (int)totalWidth % 2 == 0) //compute center for even height& width
-    {
-    	glm::vec3 startPT = glm::vec3( camCenter.x - (totalWidth/2) + (pixelSize/2) , 
-        camCenter.y + (totalHeight/2) - (pixelSize/2),
-        camCenter.z);
+    //if((int)totalHeight % 2 == 0 || (int)totalWidth % 2 == 0) //compute center for even height& width
+    //{
+    	glm::vec3 startPT = glm::vec3( myCam._center.x - (totalWidth/2) + (pixelSize/2) , 
+        myCam._center.y + (totalHeight/2) - (pixelSize/2),
+        myCam._center.z);
         int pixPos = 0;
     	for (int i = 0; i < totalWidth; i++){
         	for (int j = 0; j < totalHeight; j++)
         	{
-            	rayOrigin = glm::vec3(startPT.x + i*pixelSize , startPT.x + j*pixelSize , camCenter.z); 
+            	rayOrigin = glm::vec3(startPT.x + i*pixelSize , startPT.x + j*pixelSize , myCam._center.z); 
 
-				myRays.push_back(Ray(rayOrigin, camDirection, pixPos/totalWidth, pixPos%(int)totalWidth));//this is the ray factory now
+				myRays.push_back(Ray(rayOrigin, myCam._direction, pixPos/totalWidth, pixPos%(int)totalWidth));//this is the ray factory now
                 pixPos++;
        		}
     	}
-    }else //ODD NOT WORKING
+        /*
+    }else //off by 1 pixel - doesnt matter in a bigger picture
     {
     	glm::vec3 startPT = glm::vec3( camCenter.x, 
         camCenter.y + (totalHeight/2) - (pixelSize/2),
@@ -294,7 +155,7 @@ vector<Ray> jig(float camWidth, float camHeight, float pixelSize, glm::vec3 camC
        		}
     	}
 
-    }
+    } */
     return myRays;
 }
 
@@ -346,7 +207,7 @@ int main( int argc, char **argv ){
 		cout << *gTheScene << endl;	
 		//raytrace();
 		//vector<glm::vec3> myRays = rayFactory(jig(myCam._width, myCam._height, 1, myCam._center),myCam._direction);
-        vector<Ray> myRays = jig(myCam._width, myCam._height, myGroup._radius, myCam._center, myCam._direction, totalWidth, totalHeight);
+        vector<Ray> myRays = jig(1, myCam, myGroup, totalWidth, totalHeight);
         int rayCount = 0, hit = 0;
         cout << gTheScene->outputFile().c_str() <<endl;
         PNGImage myImage(gTheScene->outputFile( ).c_str( ), totalWidth, totalHeight); //check this
@@ -354,11 +215,11 @@ int main( int argc, char **argv ){
         {
             glm::vec3 myEle = element.returnPoint();
             cout << glm::to_string(myEle) << endl; //Ray object must refence private var inside to print
-            cout << "Intercept: " << myGroup.intercept(element.returnPoint(), myCam._direction, myGroup._center, myGroup._radius, myIntercept) <<endl;
+            cout << "Intercept: " << myGroup._o3d._s.intercept(element.returnPoint(), myCam._direction, myGroup._o3d._s._center, myGroup._o3d._s._radius, myIntercept) <<endl;
             cout << "Image Pixel Orgins" << endl;
             cout << element.returnX() << " "<<element.returnY() << endl;
             //myImage.colorPixel(rayCount, rayCount, glm::vec3(0,0,1));//myImage.colorPixel(element.returnX(), element.returnY(), glm::vec3(1,1,1));//must use intercept and pixel color
-            if(myGroup.intercept(element.returnPoint(), myCam._direction, myGroup._center, myGroup._radius , myIntercept))
+            if(myGroup._o3d._s.intercept(element.returnPoint(), myCam._direction, myGroup._o3d._s._center, myGroup._o3d._s._radius , myIntercept))
             {
                 //myImage.pixels[rayCount++] = Pixel(0,0,0);
                 //myImage.setPixel(i, j, 255, 0, 0, 255);

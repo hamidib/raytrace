@@ -292,7 +292,7 @@ void Scene::parseGroup( Group &myGroup){
 	nextToken();
 	checkToken("}", "Material");
 
-	Group g( numObjects, materialIndex, radius, center);
+	Group g( numObjects, materialIndex, Object3D(Sphere (center, radius)));
 	myGroup = g;
 }
 

@@ -2,10 +2,7 @@
 #include "Ray.h"
 #include <math.h>
 
-
-bool quadratic (float a, float b, float c, float &x0, float &x1) 
-{ 
-    /*
+/*
     float discr = b * b - 4 * a * c; 
     if (discr < 0) return false; 
     else if (discr == 0) x0 = x1 = - 0.5 * b / a; 
@@ -19,6 +16,10 @@ bool quadratic (float a, float b, float c, float &x0, float &x1)
     if (x0 > x1) std::swap(x0, x1); 
  
     return true; */
+    /*
+bool quadratic (float a, float b, float c, float &x0, float &x1) 
+{ 
+    
     float discr = b * b - 4 * a * c; 
     if (discr < 0) return false; 
     x0 = (-b + sqrt(discr) / (2 *a));
@@ -28,8 +29,9 @@ bool quadratic (float a, float b, float c, float &x0, float &x1)
     return true; 
 
 }
-
+*/
 //code/psuedo code for intersect of ray and sphere either we save the intercept to the depth file here or change the return type
+/*
 bool Group :: intercept ( glm::vec3 myRay, glm::vec3 dir, glm::vec3 myCenter, float r, float t){  //r=radius
     
     glm::vec3 L = myRay - myCenter;
@@ -59,6 +61,7 @@ bool Group :: intercept ( glm::vec3 myRay, glm::vec3 dir, glm::vec3 myCenter, fl
     return true;
 
 } 
+*/
 /* from the book - DOESNT QUITE WORK
 bool Group :: testIntersection(Ray myRay, Group sphere)
 {
