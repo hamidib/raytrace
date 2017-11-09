@@ -12,19 +12,22 @@
 
 #include <vector>
 #include "Ray.h"
-#include "3DObject.h"
+#include "Object.h"
 #include "glm/glm.hpp"
+using namespace std;
 
 class Group{
 public:
 	float _numObjects;
 	float _materialIndex;
-  Object3D _o3d;
-	//float _radius; moved to sphere
-	//glm::vec3 _center; moved to sphere
+  vector<Object*> myObjects;
+  //Object3D _o3d;
+	//float _radius; //moved to sphere
+	//glm::vec3 _center; //moved to sphere
 
 	Group(){};
-	Group( float n, float m, Object3D o3d): _numObjects(n), _materialIndex(m), _o3d(o3d) {};
+	Group( float n, float m, vector<Object*> o): _numObjects(n), _materialIndex(m), myObjects(o) {};
+  //Group( Object3D o3d): _o3d(o3d) {};
 	~Group( ){};
 
   //member functions for intercept---> will have to move to obj class
@@ -41,7 +44,7 @@ public:
   	
   	_numObjects = g._numObjects;
   	_materialIndex = g._materialIndex;
-  	_o3d = g._o3d; 
+  	myObjects = g.myObjects;
   	return *this;
   }
 };

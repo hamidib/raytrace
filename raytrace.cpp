@@ -25,9 +25,11 @@ int main( int argc, char **argv ){
 #include <iostream>
 #include <string>
 #include "Group.h"
+#include "Sphere.h"
 #include "getopt.h"
 #include "Scene.h"
 #include "Ray.h"
+#include "Hit.h"
 #include "glm/gtx/string_cast.hpp"
 
 using namespace std;
@@ -194,6 +196,8 @@ int main( int argc, char **argv ){
 	glm::vec3 myColor = glm::vec3(0, 0, 0); // color
 	glm::vec3 myDiffuseColor = glm::vec3(0, 0, 0);
 	Group myGroup;
+    Hit myHits;
+    //Sphere mySphere(myGroup._radius, myGroup._center);
 	
     float totalHeight = 0, totalWidth = 0; //size of pixel frame image
 
@@ -213,20 +217,20 @@ int main( int argc, char **argv ){
         PNGImage myImage(gTheScene->outputFile( ).c_str( ), totalWidth, totalHeight); //check this
         for(Ray element : myRays) //check rays 
         {
-            glm::vec3 myEle = element.returnPoint();
+            glm::vec3 myEle = element.getPoint();
             cout << glm::to_string(myEle) << endl; //Ray object must refence private var inside to print
-            cout << "Intercept: " << myGroup._o3d._s.intercept(element.returnPoint(), myCam._direction, myGroup._o3d._s._center, myGroup._o3d._s._radius, myIntercept) <<endl;
+            cout << "Intercept: " << myGroup.myObjects[0]->intersect(element, myHits ) << endl;//<< myGroup._o3d._s.intercept(element.getPoint(), myCam._direction, myGroup._o3d._s._center, myGroup._o3d._s._radius, myIntercept) <<endl;
             cout << "Image Pixel Orgins" << endl;
-            cout << element.returnX() << " "<<element.returnY() << endl;
+            cout << element.getX() << " "<<element.getY() << endl;
             //myImage.colorPixel(rayCount, rayCount, glm::vec3(0,0,1));//myImage.colorPixel(element.returnX(), element.returnY(), glm::vec3(1,1,1));//must use intercept and pixel color
-            if(myGroup._o3d._s.intercept(element.returnPoint(), myCam._direction, myGroup._o3d._s._center, myGroup._o3d._s._radius , myIntercept))
+            if(myGroup.myObjects[0]->intersect(element, myHits ))//myGroup._o3d._s.intercept(element.getPoint(), myCam._direction, myGroup._o3d._s._center, myGroup._o3d._s._radius , myIntercept))
             {
                 //myImage.pixels[rayCount++] = Pixel(0,0,0);
                 //myImage.setPixel(i, j, 255, 0, 0, 255);
                 if((int)totalHeight % 2 == 0 || (int)totalWidth % 2 == 0) 
                 {
-                    myImage.setPixel(element.returnX(),element.returnY(),255,0,0,255);
-                    cout << "X "<< element.returnX() << "Y " << element.returnY() << endl;
+                    myImage.setPixel(element.getX(),element.getY(),255,0,0,255);
+                    cout << "X "<< element.getX() << "Y " << element.getY() << endl;
                 }else
                 {
                     //myImage.setPixel(static_cast<float>(element.returnPoint().x + 0.5 * totalWidth +0.5), static_cast<float>(element.returnPoint().y + 0.5 * totalHeight) ,255,0,0,255);

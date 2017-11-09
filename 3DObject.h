@@ -7,27 +7,35 @@
  *
  */
 
-#ifndef _OBJECT3D_
-#define _OBJECT3D_
-#include "Ray.h"
-#include "Sphere.h"
-#include "Group.h"
+#ifndef _OBJECT_
+#define _OBJECT_
+#include "glm/glm.hpp"
+//#include "Ray.h"
+//#include "Sphere.h"
+//#include "Group.h"
 
-class Object3D//:public Group
+class Object//: public Group
 {
-	public:
-		Sphere _s;
+		//float _radius;
+		//glm::vec3 _center;
 
-		Object3D(){};
-		Object3D(Sphere s): _s(s) {};
-		~Object3D(){};
+	public:
+		//Sphere _s;
+		//Object3D(){};
+		Object(){};//Object3D(): {}:Group(); //
+		//Object3D(Sphere s): _s(s) {}:Group( n, m, o3d);
+		virtual ~Object(){};
         //make subclass for circles and put 3dobjects in groups
 
 		//code for quadratic formula
 
-    Object3D& operator=(Object3D& o)
+	virtual bool intersect() = 0 ;
+	virtual float getRadius() = 0 ;
+	virtual glm::vec3 getcenter() = 0 ;
+
+    Object& operator=(Object& o)
   {
-  	_s = o._s; //edit
+  	//_s = o._s; 
   	return *this;
   }
 

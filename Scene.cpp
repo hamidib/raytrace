@@ -10,6 +10,8 @@
 #include "Scene.h"
 #include <string>
 #include "string.h"
+#include "Object.h"
+#include "Sphere.h"
 //#include <algorithm>
 //#include <vector>
 //#include <iterator>
@@ -254,6 +256,8 @@ void Scene::parseGroup( Group &myGroup){
 	int numObjects;
 	int materialIndex;
 	float radius;
+	vector<Object*> myObjectContainer;
+
 	nextToken();
 	checkToken("Group", "Group");
 	nextToken();
@@ -292,7 +296,8 @@ void Scene::parseGroup( Group &myGroup){
 	nextToken();
 	checkToken("}", "Material");
 
-	Group g( numObjects, materialIndex, Object3D(Sphere (center, radius)));
+	myObjectContainer.push_back( new Sphere (radius, center));//. or ->
+	Group g( numObjects, materialIndex, myObjectContainer);//contrainer of objects*
 	myGroup = g;
 }
 
