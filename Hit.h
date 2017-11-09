@@ -18,8 +18,8 @@ public:
 
 	vector<glm::vec3> hits;
 
-	Hit( );
-	~Hit( );
+	Hit( ){};
+	~Hit( ){};
 
 	void push(glm::vec3 v)
 	{

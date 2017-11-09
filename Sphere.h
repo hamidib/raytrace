@@ -16,11 +16,11 @@ public:
 	glm::vec3 _center;
     float _radius;
 	//Sphere(){};
-	Sphere(float r = 0.0, glm::vec3 c = glm::vec3 (0.0, 0.0, 0.0)): _radius(r), _center(c), Object(){}
+	Sphere(float r , glm::vec3 c ):Object(), _radius(r), _center(c){};
 	//Sphere(_center, _radius): Object3D(_center, _raidus){ };
     //Sphere(glm::vec3 center, float radius): _center(center), _radius(radius){ };
   	~Sphere( ){ };
-  	bool intersect( Ray myRay );
+  	//bool intersect( Ray myRay, Hit h ){};
   	float getRadius(){return _radius;}
   	glm::vec3 getCenter(){return _center;}
   
@@ -45,7 +45,7 @@ public:
 
 	}
 
-	bool intercept ( Ray myRay, Hit &h ){  //r=radius
+	bool intersect ( Ray &myRay, Hit &h ){  //r=radius //ray const
     
     	glm::vec3 L = myRay.getPoint() - getCenter();
     	float t0, t1;
