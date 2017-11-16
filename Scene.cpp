@@ -176,12 +176,12 @@ void Scene::parseCamera( Camera &myCam){
 	nextToken( );
 	checkToken( "width", "Camera" );
 	nextToken( );
-	width = parseFloat( ); //width
+	width = parseInt( ); //width
 
 	nextToken( );
 	checkToken( "height", "Camera" );
 	nextToken( );
-	height = parseFloat( ); //height
+	height = parseInt( ); //height
 	
 	nextToken( );
 	checkToken( "}", "Camera" );
@@ -227,21 +227,23 @@ void Scene::parseMaterials( glm::vec3 &myDiffuseColor){
 	nextToken();
 	numMaterials = parseInt( ); //Num Materials
 
-	nextToken();
-	checkToken("PhongMaterial", "Material");
-	nextToken();
-	checkToken("{", "Material");
+	for(int i = 0; i < numMaterials; i++){
+		nextToken();
+		checkToken("PhongMaterial", "Material");
+		nextToken();
+		checkToken("{", "Material");
 
-	nextToken();
-	checkToken("diffuseColor", "Material");
-	for( int i = 0; i < 3; i++ ){
-		nextToken( );
-		vec[i] = parseFloat( );//change later
+		nextToken();
+		checkToken("diffuseColor", "Material");
+		for( int i = 0; i < 3; i++ ){
+			nextToken( );
+			vec[i] = parseFloat( );//change later
+		} 
+		diffuseColor = glm::vec3(vec[0], vec[1], vec[2]);
+
+		nextToken();
+		checkToken("}", "xMaterial");
 	}
-	diffuseColor = glm::vec3(vec[0], vec[1], vec[2]);
-
-	nextToken();
-	checkToken("}", "Material");
 	nextToken();
 	checkToken("}", "Material");
 

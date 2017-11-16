@@ -45,6 +45,7 @@ void usage( string message = "" ){
 	
 }
 
+
 std::ostream& operator <<( std::ostream &out, const Pixel &p ){
   p.write( out );
   return( out );
@@ -94,97 +95,35 @@ void parseCommandLine( int argc, char **argv ){
 	}
 	gTheScene = new Scene( inputFile, outputFile, depthFile );
 }
-//make jig2 with vector - norm(direction) then use this in rayfactory
-vector<Ray> jig(float pixelSize, Camera myCam, Group myGroup, float &totalWidth, float &totalHeight)//float camWidth, float camHeight, float pixelSize, glm::vec3 camCenter, glm::vec3 camDirection, float &totalWidth, float &totalHeight)//(float camera.width, float camera.height, float pixelSize, vec3 camera.center)
-{
-    //float totalWidth, totalHeight;
 
- 	if (pixelSize > myCam._height)
-        totalHeight = 1;
-    else if(pixelSize == myCam._height)
-        totalHeight = myCam._height;
-    else 
-        totalHeight = myCam._height/pixelSize;
-
-           
-    if (pixelSize > myCam._width)
-        totalWidth = 1;
-    else if(pixelSize == myCam._width)
-        totalWidth = myCam._width;
-    else 
-        totalWidth = myCam._width/pixelSize;
-    
-    vector<Ray> myRays;
-    glm::vec3 rayOrigin;//vector<glm::vec3> myJig; //not glm:: vector????
-    //Starting Point
-    //if((int)totalHeight % 2 == 0 || (int)totalWidth % 2 == 0) //compute center for even height& width
-    //{
-    	glm::vec3 startPT = glm::vec3( myCam._center.x - (totalWidth/2) + (pixelSize/2) , 
-        myCam._center.y + (totalHeight/2) - (pixelSize/2),
-        myCam._center.z);
-        int pixPos = 0;
-    	for (int i = 0; i < totalWidth; i++){
-        	for (int j = 0; j < totalHeight; j++)
-        	{
-            	rayOrigin = glm::vec3(startPT.x + i*pixelSize , startPT.x + j*pixelSize , myCam._center.z); 
-
-				myRays.push_back(Ray(rayOrigin, myCam._direction, pixPos/totalWidth, pixPos%(int)totalWidth));//this is the ray factory now
-                pixPos++;
-       		}
-    	}
-        /*
-    }else //off by 1 pixel - doesnt matter in a bigger picture
-    {
-    	glm::vec3 startPT = glm::vec3( camCenter.x, 
-        camCenter.y + (totalHeight/2) - (pixelSize/2),
-        camCenter.z);
-
-    	for (float j = startPT.y; j > -totalHeight/2 ; j = j - pixelSize){
-    		
-    		rayOrigin = glm::vec3(startPT.x , j , camCenter.z); 
-			myRays.push_back(Ray(rayOrigin, camDirection, rayOrigin.x, rayOrigin.y));
-        	
-        	for (float i = pixelSize/2; i < totalWidth/2 ; i++)
-        	{
-
-            	rayOrigin = glm::vec3(startPT.x + i , j, camCenter.z); 
-                //l-> l/w, l%w
-                //#
-				myRays.push_back(Ray(rayOrigin, camDirection, rayOrigin.x, rayOrigin.y));//this is the ray factory now
-
-				rayOrigin = glm::vec3(startPT.x - i , j, camCenter.z); 
-				myRays.push_back(Ray(rayOrigin, camDirection, rayOrigin.x, rayOrigin.y));//this is the ray factory now
-       		}
-    	}
-
-    } */
-    return myRays;
-}
-
-
-
-
-
-
-
-/*
-Ray rayFactory(vector<glm::vec3> jiggy, glm::vec3 camDirection)
-{
-    vector<glm::vec3> myRays;
-    
-    for(glm::vec3 element : jiggy) 
-    {
-      //myRays.push_back(glm::vec3(normalize(camDirection) - element));  //element - normalize(camDirection) this is completely wrong
-    	 // ( intersect())
-		//if(newVal < DepthfileVal)
-			//set depthfile
-			//set color - picture file
-      
+vector<Ray> rayFactory(const Camera& cam, const Group& g){
+    vector<Ray> v;
+    float width = cam._width;
+    float height = cam._height;
+    float pixelSize = cam._pixelSize;
+    // The starting point is in camera
+    glm::vec3 startPT = glm::vec3(
+        cam._center.x - (width/2.0) + (pixelSize/2.0) , 
+        cam._center.y + (height/2.0) - (pixelSize/2.0),
+        cam._center.z
+        );
+    cerr << glm::to_string(startPT) << endl;
+    for (float i = 0; i < cam.pixelWidth( ); i++){
+        for (float j = 0; j < cam.pixelHeight( ); j++){
+            glm::vec3 rayOrigin = glm::vec3(
+                startPT.x + i*pixelSize,
+                startPT.x + j*pixelSize,
+                startPT.z
+                ); 
+            // this is the ray factory now
+            Ray r(rayOrigin, cam._direction, int(trunc(i)), int(trunc(j)));
+            //cerr << r << endl;
+            //r.write(cerr);
+            v.push_back(r);
+        }
     }
-
-    return myRays;
+    return v;
 }
-*/
 
 
 int main( int argc, char **argv ){
@@ -197,9 +136,6 @@ int main( int argc, char **argv ){
 	glm::vec3 myDiffuseColor = glm::vec3(0, 0, 0);
 	Group myGroup;
     Hit myHits;
-    //Sphere mySphere(myGroup._radius, myGroup._center);
-	
-    float totalHeight = 0, totalWidth = 0; //size of pixel frame image
 
 	parseCommandLine( argc, argv );
 	argc -= optind;
@@ -207,41 +143,31 @@ int main( int argc, char **argv ){
 	if( gTheScene->hasInputSceneFilePath( ) &&
 			gTheScene->hasOutputFilePath( ) &&
 			gTheScene->hasDepthFilePath( ) ){
-		gTheScene->parse( myCam, myColor, myDiffuseColor, myGroup);//pass constructors by reference	
+		gTheScene->parse( myCam, myColor, myDiffuseColor, myGroup);
 		cout << *gTheScene << endl;	
-		//raytrace();
-		//vector<glm::vec3> myRays = rayFactory(jig(myCam._width, myCam._height, 1, myCam._center),myCam._direction);
-        vector<Ray> myRays = jig(1, myCam, myGroup, totalWidth, totalHeight);
+        myCam._pixelSize = 0.015625;
+        cout << "Pixel size: " << myCam._pixelSize << endl;
+        cout << "Pixel Width & Height: " << myCam.pixelWidth( ) << " " << myCam.pixelHeight( ) << endl;
+
+        vector<Ray> myRays = rayFactory(myCam, myGroup);
+
+        cout << "Number of rays: " << myRays.size( ) << endl;
+        
         int rayCount = 0, hit = 0;
         cout << gTheScene->outputFile().c_str() <<endl;
-        PNGImage myImage(gTheScene->outputFile( ).c_str( ), totalWidth, totalHeight); //check this
+        PNGImage myImage(gTheScene->outputFile( ).c_str( ), myCam.pixelWidth( ), myCam.pixelHeight( ));
+        myImage.grayFill(0);
         for(Ray element : myRays) //check rays 
         {
-            glm::vec3 myEle = element.getPoint();
-            cout << glm::to_string(myEle) << endl; //Ray object must refence private var inside to print
-            cout << "Intercept: " << myGroup.myObjects[0]->intersect(element, myHits ) << endl;//<< myGroup._o3d._s.intercept(element.getPoint(), myCam._direction, myGroup._o3d._s._center, myGroup._o3d._s._radius, myIntercept) <<endl;
-            cout << "Image Pixel Orgins" << endl;
-            cout << element.getX() << " "<<element.getY() << endl;
-            //myImage.colorPixel(rayCount, rayCount, glm::vec3(0,0,1));//myImage.colorPixel(element.returnX(), element.returnY(), glm::vec3(1,1,1));//must use intercept and pixel color
-            if(myGroup.myObjects[0]->intersect(element, myHits ))//myGroup._o3d._s.intercept(element.getPoint(), myCam._direction, myGroup._o3d._s._center, myGroup._o3d._s._radius , myIntercept))
+            //cout << "Intercept: " << myGroup.myObjects[0]->intersect(element, myHits ) << endl;
+            if(myGroup.myObjects[0]->intersect(element, myHits ))
             {
-                //myImage.pixels[rayCount++] = Pixel(0,0,0);
-                //myImage.setPixel(i, j, 255, 0, 0, 255);
-                if((int)totalHeight % 2 == 0 || (int)totalWidth % 2 == 0) 
-                {
-                    myImage.setPixel(element.getX(),element.getY(),255,0,0,255);
-                    cout << "X "<< element.getX() << "Y " << element.getY() << endl;
-                }else
-                {
-                    //myImage.setPixel(static_cast<float>(element.returnPoint().x + 0.5 * totalWidth +0.5), static_cast<float>(element.returnPoint().y + 0.5 * totalHeight) ,255,0,0,255);
-                    //cout << "img coord: "<< element.returnPoint().x + 0.5 * totalWidth +0.5 << " " << element.returnPoint().y + 0.5 * totalHeight ;
-                }
-            
+                myImage.setPixel(element.getX( ), element.getY( ), 255, 0, 0, 255);
+                cout << "Hit!!" << endl;
                 hit++;
             }
-            rayCount++;
         }
-        cout <<"Ray Count: " <<rayCount <<" hit count: " << hit<<endl;
+        cout <<"Ray Count: " << myRays.size( ) <<" hit count: " << hit<<endl;
         myImage.save( );
 
 	}else{
