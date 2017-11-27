@@ -132,6 +132,7 @@ int Scene::parseInt( ){
 
 void Scene::checkToken( const char *str, const char *stage  ){
 	if( strcmp( currentToken, str ) != 0 ){
+		//if( strcmp( currentToken, "Sphere" ) == 0){ break;}
 		cerr << stage << " parse error at line " << lineNumber << " token " << tokenCount << ": " << currentToken << endl;
 		cerr << "Current line: " << currentLine << endl;
 		cerr << "Expected \'" << str << "\'" << endl;
@@ -270,12 +271,19 @@ void Scene::parseGroup( Group &myGroup){
 	nextToken();
 	numObjects = parseInt(); //Num Objects
 
+	for(int i = 0; i < numObjects; i++){
 	nextToken();
+	std::cout << "check current token: " << currentToken << std::endl;
+	if (strcmp(currentToken, "MaterialIndex") == 0) {	
 	checkToken("MaterialIndex", "Group");
 	nextToken();
-	materialIndex = parseInt(); //Material Index
-
+	materialIndex = parseInt(); 
 	nextToken();
+	}
+	//Material Index
+
+	
+	//nextToken();
 	checkToken("Sphere", "Group");
 	nextToken();
 	checkToken("{", "Group");
@@ -292,13 +300,15 @@ void Scene::parseGroup( Group &myGroup){
 	checkToken("radius", "Group");
 	nextToken();
 	radius = parseInt();  //radius
+	myObjectContainer.push_back( new Sphere (radius, center));
 
 	nextToken();
 	checkToken("}", "Material");
+	}
 	nextToken();
 	checkToken("}", "Material");
 
-	myObjectContainer.push_back( new Sphere (radius, center));//. or ->
+	//myObjectContainer.push_back( new Sphere (radius, center));//. or ->
 	Group g( numObjects, materialIndex, myObjectContainer);//contrainer of objects*
 	myGroup = g;
 }
