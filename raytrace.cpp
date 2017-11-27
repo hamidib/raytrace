@@ -159,13 +159,15 @@ int main( int argc, char **argv ){
         myImage.grayFill(0);
         for(Ray element : myRays) //check rays 
         {
-            //cout << "Intercept: " << myGroup.myObjects[0]->intersect(element, myHits ) << endl;
-            if(myGroup.myObjects[0]->intersect(element, myHits ))
-            {
-                myImage.setPixel(element.getX( ), element.getY( ), 255, 0, 0, 255);
-                cout << "Hit!!" << endl;
-                hit++;
-            }
+ 	    for(int i = 0; i < myGroup._numObjects; i++) {      
+	 //cout << "Intercept: " << myGroup.myObjects[0]->intersect(element, myHits ) << endl;
+		    if(myGroup.myObjects[i]->intersect(element, myHits ))
+		    {
+		        myImage.setPixel(element.getX( ), element.getY( ), 255, 0, 0, 255);
+		        cout << "Hit!!" << endl;
+		        hit++;
+		    }
+		}
         }
         cout <<"Ray Count: " << myRays.size( ) <<" hit count: " << hit<<endl;
         myImage.save( );
