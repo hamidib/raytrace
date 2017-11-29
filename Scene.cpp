@@ -270,6 +270,7 @@ void Scene::parseGroup( Group &myGroup){
 	checkToken("numObjects", "Group");
 	nextToken();
 	numObjects = parseInt(); //Num Objects
+	std::cout << "numObjects: " << numObjects << std::endl;
 
 	for(int i = 0; i < numObjects; i++){
 	nextToken();
@@ -278,6 +279,7 @@ void Scene::parseGroup( Group &myGroup){
 	checkToken("MaterialIndex", "Group");
 	nextToken();
 	materialIndex = parseInt(); 
+	std::cout << "material Index: " << materialIndex << std::endl;
 	nextToken();
 	}
 	//Material Index
@@ -295,11 +297,13 @@ void Scene::parseGroup( Group &myGroup){
 		vec[i] = parseFloat( );//change later
 	}
 	center = glm::vec3(vec[0], vec[1], vec[2]); // center
+	std::cout << "center: " << center[0] << " , " << center[1] << " , " << center[2] << std::endl;
 
 	nextToken();
 	checkToken("radius", "Group");
 	nextToken();
-	radius = parseInt();  //radius
+	radius = parseFloat();  //radius
+	std::cout << "radius: " << radius << std::endl;
 	myObjectContainer.push_back( new Sphere (radius, center));
 
 	nextToken();
