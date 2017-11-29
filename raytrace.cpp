@@ -130,7 +130,7 @@ int main( int argc, char **argv ){
 	string pathStr;
 	gProgramName = argv[0];
 	float myIntercept;
-
+    float tvalue;
 	Camera myCam;
 	glm::vec3 myColor = glm::vec3(0, 0, 0); // color
 	glm::vec3 myDiffuseColor = glm::vec3(0, 0, 0);
@@ -161,10 +161,10 @@ int main( int argc, char **argv ){
         {
  	    for(int i = 0; i < myGroup._numObjects; i++) {      
 	 //cout << "Intercept: " << myGroup.myObjects[0]->intersect(element, myHits ) << endl;
-		    if(myGroup.myObjects[i]->intersect(element, myHits ))
+		    if(myGroup.myObjects[i]->intersect(element, myHits, tvalue ))//should check for each intersect for each object in each ray
 		    {
-		        myImage.setPixel(element.getX( ), element.getY( ), 255, 0, 0, 255);
-		        cout << "Hit!!" << endl;
+		        myImage.setPixel(element.getX( ), element.getY( ), (tvalue-9)*255, 0, 0, 255);//immediatly overrides check for hit
+		        cout << "Hit!!" <<"t: "<<tvalue<< endl;
 		        hit++;
 		    }
 		}

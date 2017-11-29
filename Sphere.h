@@ -45,8 +45,8 @@ public:
 
 	}
 
-	bool intersect ( Ray &r, Hit &h ){  //r=radius //ray const
-    float t;
+	bool intersect ( Ray &r, Hit &h, float &t ){  //r=radius //ray const
+    //float t;
     glm::vec3 tmp = r.getPoint( ) - _center;
     float a = glm::dot(r.getDirection( ), r.getDirection( ));
     float b = 2.0 * glm::dot(tmp, r.getDirection( ));
