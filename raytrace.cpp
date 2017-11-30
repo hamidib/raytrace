@@ -142,23 +142,24 @@ float min(float a, float b)
 
 glm::vec3 computeLight(Hit h, Camera c)
 {
-  glm::vec3 lightcolor = glm::vec3(255, 255, 255);
+  glm::vec3 lightcolor = glm::vec3(1, 1, 1);
   glm::vec3 myColor = glm::vec3(255, 0, 0);
-  glm::vec3 specular = glm::vec3(255, 0, 0);
+  glm::vec3 specular = glm::vec3(1, 0, 0);
+  float shininess = 0.75;
   float nDotL = dot(h.normal, c._direction);
   cout << "nDotl" << nDotL << endl;
   glm::vec3 half = normalize(c._direction + c._direction);
   float nDotR = dot(h.normal, half);
-  glm::vec3 lambert = h.material * myColor * nDotR ;// * max(nDotL, 0.0);
+  glm::vec3 lambert = h.material * myColor * nDotR;//(nDotR-1);// * max(nDotL, 0.0);
   cout << "nDotR" << nDotR << endl;
   
   //glm::vec4 phong = specular * lightcolor * pow(max(nDotR, 0.0), shininess);
-  glm::vec3 phong = specular * lightcolor ;//* pow(max(nDotR, 0.0));//, shininess);
+  //glm::vec3 phong = specular * lightcolor * pow(max(nDotR, 0.0), shininess);
 
-  myColor = glm::vec3(abs(255-lambert.x), lambert.y, lambert.z);
+  myColor = glm::vec3(abs(lambert.x), lambert.y, lambert.z);//glm::vec3(abs(255 - lambert.x), lambert.y, lambert.z);//abs(lambert.x - 1/255)
   glm::vec3 retval = myColor;// + phong;
   cout<< "lambert: " << glm::to_string(lambert) << endl;
-  cout<< "phong: "<<glm::to_string(phong) << endl;
+  //cout<< "phong: "<<glm::to_string(phong) << endl;
   cout<<"retval : "<< glm::to_string(retval) << endl;
   return retval;
 }
