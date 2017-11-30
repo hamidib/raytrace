@@ -16,7 +16,13 @@ using namespace std;
 class Hit{
 public:
 
-	vector<glm::vec3> hits;
+	vector<glm::vec3> hits;//possibly not needed
+	
+	glm::vec3 hitPoint;
+	float pixel_i;
+	float pixel_j;
+	glm::vec3 normal;
+	glm::vec3 material;
 
 	Hit( ){};
 	~Hit( ){};

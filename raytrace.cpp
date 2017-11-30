@@ -24,6 +24,7 @@ int main( int argc, char **argv ){
 */
 #include <iostream>
 #include <string>
+#include <cmath>
 #include "Group.h"
 #include "Sphere.h"
 #include "getopt.h"
@@ -124,6 +125,43 @@ vector<Ray> rayFactory(const Camera& cam, const Group& g){
     }
     return v;
 }
+float max(float a, float b)
+{
+    if(a > b)
+        return a;
+    else if(b >= a)
+        return b;
+}
+float min(float a, float b)
+{
+    if(a < b)
+        return a;
+    else if(b <= a)
+        return b;
+}
+
+glm::vec3 computeLight(Hit h, Camera c)
+{
+  glm::vec3 lightcolor = glm::vec3(255, 255, 255);
+  glm::vec3 myColor = glm::vec3(255, 0, 0);
+  glm::vec3 specular = glm::vec3(255, 0, 0);
+  float nDotL = dot(h.normal, c._direction);
+  cout << "nDotl" << nDotL << endl;
+  glm::vec3 half = normalize(c._direction + c._direction);
+  float nDotR = dot(h.normal, half);
+  glm::vec3 lambert = h.material * myColor * nDotR ;// * max(nDotL, 0.0);
+  cout << "nDotR" << nDotR << endl;
+  
+  //glm::vec4 phong = specular * lightcolor * pow(max(nDotR, 0.0), shininess);
+  glm::vec3 phong = specular * lightcolor ;//* pow(max(nDotR, 0.0));//, shininess);
+
+  myColor = glm::vec3(abs(255-lambert.x), lambert.y, lambert.z);
+  glm::vec3 retval = myColor;// + phong;
+  cout<< "lambert: " << glm::to_string(lambert) << endl;
+  cout<< "phong: "<<glm::to_string(phong) << endl;
+  cout<<"retval : "<< glm::to_string(retval) << endl;
+  return retval;
+}
 
 
 int main( int argc, char **argv ){
@@ -163,7 +201,11 @@ int main( int argc, char **argv ){
 	 //cout << "Intercept: " << myGroup.myObjects[0]->intersect(element, myHits ) << endl;
 		    if(myGroup.myObjects[i]->intersect(element, myHits, tvalue ))//should check for each intersect for each object in each ray
 		    {
-		        myImage.setPixel(element.getX( ), element.getY( ), (tvalue-9)*255, 0, 0, 255);//immediatly overrides check for hit
+                myHits.material = myDiffuseColor; //set hit material
+                myHits.pixel_i = element.getX(); //set pixel
+                myHits.pixel_j = element.getY(); //set pixel
+                glm::vec3 color = computeLight(myHits, myCam);
+		        myImage.setPixel(element.getX( ), element.getY( ), color.x, color.y, color.z, 255);//(tvalue-9)*255, 0, 0, 255);//immediatly overrides check for hit
 		        cout << "Hit!!" <<"t: "<<tvalue<< endl;
 		        hit++;
 		    }

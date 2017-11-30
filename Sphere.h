@@ -59,10 +59,14 @@ public:
       float denom = 2.0 * a;
       t = (-b - e) / denom;
       if(t > 0.000001){
+      	h.normal = (tmp + t * r.getDirection()) / _radius;
+      	h.hitPoint = r.getPoint() + t * r.getDirection();
         return true;
       }
       t = (-b + e) / denom;
       if(t > 0.000001){
+      	h.normal = (tmp + t * r.getDirection()) / _radius;
+      	h.hitPoint = r.getPoint() + t * r.getDirection();
         return true;
       }
     }
