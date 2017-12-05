@@ -9,7 +9,7 @@
 
 #ifndef _HIT_H_
 #define _HIT_H_
-#include <glm/vec3.hpp>
+#include "glm/vec3.hpp"
 #include <vector>
 using namespace std;
 

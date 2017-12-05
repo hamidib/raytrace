@@ -46,7 +46,7 @@ class Scene{
 		bool hasOutputFilePath( );
 		bool hasDepthFilePath( );
 
-		bool parse( Camera &myCam, glm::vec3 &myColor, glm::vec3 &myDiffuseColor, Group &myGroup);
+		bool parse( Camera &myCam, glm::vec3 &myColor, Material &myMaterial, Group &myGroup);
 
 		// I/O
 		void write( std::ostream &out ) const;
@@ -82,7 +82,7 @@ class Scene{
     double parseDouble( );
 		int parseInt( );
 		// Finish these...
-		void parseMaterials( glm::vec3 &myDiffuseColor);
+		void parseMaterials( Material &myMaterial);
 		void parseGroup( Group &myGroup);
 };
 

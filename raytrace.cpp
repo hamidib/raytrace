@@ -32,6 +32,8 @@ int main( int argc, char **argv ){
 #include "Ray.h"
 #include "Hit.h"
 #include "glm/gtx/string_cast.hpp"
+#include "Material.h"
+#include "RGBcolor.h"
 
 using namespace std;
 
@@ -143,24 +145,25 @@ float min(float a, float b)
 glm::vec3 computeLight(Hit h, Camera c)
 {
   glm::vec3 lightcolor = glm::vec3(1, 1, 1);
-  glm::vec3 myColor = glm::vec3(255, 0, 0);
+  glm::vec3 myColor = glm::vec3(255, 255, 255);
   glm::vec3 specular = glm::vec3(1, 0, 0);
   float shininess = 0.75;
   float nDotL = dot(h.normal, c._direction);
-  cout << "nDotl" << nDotL << endl;
+ // cout << "nDotl" << nDotL << endl;
   glm::vec3 half = normalize(c._direction + c._direction);
   float nDotR = dot(h.normal, half);
+  cout << "material: " << h.material[0] << "," << h.material[1] << "," << h.material[2] << endl;
   glm::vec3 lambert = h.material * myColor * nDotR;//(nDotR-1);// * max(nDotL, 0.0);
-  cout << "nDotR" << nDotR << endl;
+ // cout << "nDotR" << nDotR << endl;
   
   //glm::vec4 phong = specular * lightcolor * pow(max(nDotR, 0.0), shininess);
   //glm::vec3 phong = specular * lightcolor * pow(max(nDotR, 0.0), shininess);
 
-  myColor = glm::vec3(abs(lambert.x), lambert.y, lambert.z);//glm::vec3(abs(255 - lambert.x), lambert.y, lambert.z);//abs(lambert.x - 1/255)
+  myColor = glm::vec3(abs(lambert.x), abs(lambert.y), abs(lambert.z));//glm::vec3(abs(255 - lambert.x), lambert.y, lambert.z);//abs(lambert.x - 1/255)
   glm::vec3 retval = myColor;// + phong;
-  cout<< "lambert: " << glm::to_string(lambert) << endl;
+//cout<< "lambert: " << glm::to_string(lambert) << endl;
   //cout<< "phong: "<<glm::to_string(phong) << endl;
-  cout<<"retval : "<< glm::to_string(retval) << endl;
+//  cout<<"retval : "<< glm::to_string(retval) << endl;
   return retval;
 }
 
@@ -174,7 +177,8 @@ int main( int argc, char **argv ){
 	glm::vec3 myColor = glm::vec3(0, 0, 0); // color
 	glm::vec3 myDiffuseColor = glm::vec3(0, 0, 0);
 	Group myGroup;
-    Hit myHits;
+    	Hit myHits;
+	Material myMaterial;
 
 	parseCommandLine( argc, argv );
 	argc -= optind;
@@ -182,7 +186,7 @@ int main( int argc, char **argv ){
 	if( gTheScene->hasInputSceneFilePath( ) &&
 			gTheScene->hasOutputFilePath( ) &&
 			gTheScene->hasDepthFilePath( ) ){
-		gTheScene->parse( myCam, myColor, myDiffuseColor, myGroup);
+		gTheScene->parse( myCam, myColor, myMaterial, myGroup);
 		cout << *gTheScene << endl;	
         myCam._pixelSize = 0.015625;
         cout << "Pixel size: " << myCam._pixelSize << endl;
@@ -201,13 +205,19 @@ int main( int argc, char **argv ){
  	    for(int i = 0; i < myGroup._numObjects; i++) {      
 	 //cout << "Intercept: " << myGroup.myObjects[0]->intersect(element, myHits ) << endl;
 		    if(myGroup.myObjects[i]->intersect(element, myHits, tvalue ))//should check for each intersect for each object in each ray
-		    {
-                myHits.material = myDiffuseColor; //set hit material
+		    { //the switch case to choose material based on material index can go here
+		//if(myGroup._materialIndex){  
+			//(myGroup._materialIndex)   
+			cout << "material Index: " << myGroup.myObjects[i]->getMaterialIndex() << endl;           
+			myHits.material = myMaterial.myRGBcolors[myGroup.myObjects[i]->getMaterialIndex()]->getColor(); //set hit material
+		//}
+		//else
+			//myHits.material = myMaterial.myRGBcolors[1]->getColor();
                 myHits.pixel_i = element.getX(); //set pixel
                 myHits.pixel_j = element.getY(); //set pixel
                 glm::vec3 color = computeLight(myHits, myCam);
 		        myImage.setPixel(element.getX( ), element.getY( ), color.x, color.y, color.z, 255);//(tvalue-9)*255, 0, 0, 255);//immediatly overrides check for hit
-		        cout << "Hit!!" <<"t: "<<tvalue<< endl;
+		      //  cout << "Hit!!" <<"t: "<<tvalue<< endl;
 		        hit++;
 		    }
 		}

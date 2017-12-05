@@ -12,6 +12,7 @@
 #include "string.h"
 #include "Object.h"
 #include "Sphere.h"
+#include "RGBcolor.h"
 //#include <algorithm>
 //#include <vector>
 //#include <iterator>
@@ -213,9 +214,10 @@ void Scene::parseBackground(glm::vec3 &myColor){
 	myColor = color;
 }
 
-void Scene::parseMaterials( glm::vec3 &myDiffuseColor){
+void Scene::parseMaterials( Material &myMaterial){
 	//cerr << "materials not implemented" << endl;
 	float vec[3];
+	vector<RGBcolor*> myColorContainer;
 	glm::vec3 diffuseColor;
 	int numMaterials;
 	nextToken();
@@ -240,15 +242,19 @@ void Scene::parseMaterials( glm::vec3 &myDiffuseColor){
 			nextToken( );
 			vec[i] = parseFloat( );//change later
 		} 
-		diffuseColor = glm::vec3(vec[0], vec[1], vec[2]);
-
+		diffuseColor = glm::vec3(vec[0], vec[1], vec[2]); //we need to store color in a vector of vector container or array of vecs
+		//or alt do some kind of switch case to assign diffuse color based on index & material index
+		std::cout << "DiffuseColor: " << diffuseColor[0] << " , " << diffuseColor[1] << " , " << diffuseColor[2] << std::endl;
+		myColorContainer.push_back( new RGBcolor (diffuseColor));		
 		nextToken();
 		checkToken("}", "xMaterial");
 	}
 	nextToken();
 	checkToken("}", "Material");
 
-	myDiffuseColor = diffuseColor;
+	//myDiffuseColor = diffuseColor;
+	Material m(myColorContainer);//contrainer of objects*
+	myMaterial = m;
 
 }
 
@@ -304,7 +310,7 @@ void Scene::parseGroup( Group &myGroup){
 	nextToken();
 	radius = parseFloat();  //radius
 	std::cout << "radius: " << radius << std::endl;
-	myObjectContainer.push_back( new Sphere (radius, center));
+	myObjectContainer.push_back( new Sphere (radius, center, materialIndex));
 
 	nextToken();
 	checkToken("}", "Material");
@@ -318,7 +324,7 @@ void Scene::parseGroup( Group &myGroup){
 }
 
 
-bool Scene::parse( Camera &myCam, glm::vec3 &myColor, glm::vec3 &myDiffuseColor, Group &myGroup){	//pass constructors by reference
+bool Scene::parse( Camera &myCam, glm::vec3 &myColor, Material &myMaterial, Group &myGroup){	//pass constructors by reference
 	bool ret = true;
 	lineNumber = 0;
 	tokenCount = 0;
@@ -330,7 +336,7 @@ bool Scene::parse( Camera &myCam, glm::vec3 &myColor, glm::vec3 &myDiffuseColor,
 	}
 	parseCamera( myCam);  //call cam const
 	parseBackground( myColor);
-	parseMaterials( myDiffuseColor);
+	parseMaterials( myMaterial);
 	parseGroup( myGroup);
 
 	inputFileStream.close( );

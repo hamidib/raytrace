@@ -32,6 +32,7 @@ class Object//: public Group
 		//code for quadratic formula
 
 	virtual bool intersect(Ray &r, Hit &h, float &t) = 0; // all intersects take a ray and hit object
+	virtual int getMaterialIndex() = 0;
 	//virtual float getRadius() ;
 	//virtual glm::vec3 getcenter() ;
 
