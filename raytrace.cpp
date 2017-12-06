@@ -1,27 +1,10 @@
-/*
-//End of implementation 
-
-int main( int argc, char **argv ){
-	string pathStr;
-	gProgramName = argv[0];
-
-	
-	parseCommandLine( argc, argv );
-	argc -= optind;
-	argv += optind;
-	if( gTheScene->hasInputSceneFilePath( ) &&
-			gTheScene->hasOutputFilePath( ) &&
-			gTheScene->hasDepthFilePath( ) ){
-		gTheScene->parse( );	
-		cout << *gTheScene << endl;	
-	}else{
-		usage( "You specify an input scene file, an output file and a depth file." );
-	}
-
-
-	return( 0 );
-}
+/*Bijan Hamidi & Ruth Obidah
+ * bhamidi@csu.fullerton.edu, ruthobidah@csu.fullerton.edu
+ * CS 599 Independent Study
+ * December 2017
 */
+
+
 #include <iostream>
 #include <string>
 #include <cmath>
@@ -152,7 +135,8 @@ glm::vec3 computeLight(Hit h, Camera c)
  // cout << "nDotl" << nDotL << endl;
   glm::vec3 half = normalize(c._direction + c._direction);
   float nDotR = dot(h.normal, half);
-  cout << "material: " << h.material[0] << "," << h.material[1] << "," << h.material[2] << endl;
+  cout << "material: " << h.material[0] << "," << h.material[1] 
+  << "," << h.material[2] << endl;
   glm::vec3 lambert = h.material * myColor * nDotR;//(nDotR-1);// * max(nDotL, 0.0);
  // cout << "nDotR" << nDotR << endl;
   
@@ -190,7 +174,8 @@ int main( int argc, char **argv ){
 		cout << *gTheScene << endl;	
         myCam._pixelSize = 0.015625;
         cout << "Pixel size: " << myCam._pixelSize << endl;
-        cout << "Pixel Width & Height: " << myCam.pixelWidth( ) << " " << myCam.pixelHeight( ) << endl;
+        cout << "Pixel Width & Height: " << myCam.pixelWidth( ) << " " 
+	<< myCam.pixelHeight( ) << endl;
 
         vector<Ray> myRays = rayFactory(myCam, myGroup);
 
@@ -198,7 +183,8 @@ int main( int argc, char **argv ){
         
         int rayCount = 0, hit = 0;
         cout << gTheScene->outputFile().c_str() <<endl;
-        PNGImage myImage(gTheScene->outputFile( ).c_str( ), myCam.pixelWidth( ), myCam.pixelHeight( ));
+        PNGImage myImage(gTheScene->outputFile( ).c_str( ), myCam.pixelWidth( ),
+	 myCam.pixelHeight( ));
         myImage.grayFill(0);
         for(Ray element : myRays) //check rays 
         {
@@ -209,14 +195,16 @@ int main( int argc, char **argv ){
 		//if(myGroup._materialIndex){  
 			//(myGroup._materialIndex)   
 			cout << "material Index: " << myGroup.myObjects[i]->getMaterialIndex() << endl;           
-			myHits.material = myMaterial.myRGBcolors[myGroup.myObjects[i]->getMaterialIndex()]->getColor(); //set hit material
+			myHits.material = myMaterial.myRGBcolors[myGroup.myObjects[i]
+			->getMaterialIndex()]->getColor(); //set hit material
 		//}
 		//else
 			//myHits.material = myMaterial.myRGBcolors[1]->getColor();
                 myHits.pixel_i = element.getX(); //set pixel
                 myHits.pixel_j = element.getY(); //set pixel
                 glm::vec3 color = computeLight(myHits, myCam);
-		        myImage.setPixel(element.getX( ), element.getY( ), color.x, color.y, color.z, 255);//(tvalue-9)*255, 0, 0, 255);//immediatly overrides check for hit
+		        myImage.setPixel(element.getX( ), element.getY( ),
+		color.x, color.y, color.z, 255);
 		      //  cout << "Hit!!" <<"t: "<<tvalue<< endl;
 		        hit++;
 		    }

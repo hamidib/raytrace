@@ -1,9 +1,9 @@
-/* Your Name Here
- * somebody at something dot TLD
- * CS 566
- * September 20XX
+/* Bijan Hamidi & Ruth Obidah
+ * bhamidi@csu.fullerton.edu, ruthobidah@csu.fullerton.edu
+ * CS 599 Independent Study
+ * December 2017
  *
- * $Id: Material.h 1961 2010-02-24 08:46:53Z mshafae $
+ * $Id: Material.h 1961 2017-12-05 08:46:53Z mshafae $
  *
  */
 #include "glm/vec3.hpp"
@@ -16,13 +16,12 @@ using namespace std;
 
 class Material{
 public:
-	vector<RGBcolor*> myRGBcolors;
-	//glm::vec3 _Color;
+	vector<RGBcolor*> myRGBcolors;       //container of RGBcolors
+	
 	Material(){};
 	Material( vector<RGBcolor*> c): myRGBcolors(c){};
 	~Material(){};
 
-	//glm::vec3 getColor() {return ;}
 
 	Material& operator=(Material& m)
   	  {

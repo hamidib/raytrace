@@ -1,3 +1,9 @@
+/*Bijan Hamidi & Ruth Obidah
+ * bhamidi@csu.fullerton.edu, ruthobidah@csu.fullerton.edu
+ * CS 599 Independent Study
+ * December 2017
+*/
+
 #ifndef _RGBCOLOR_H_
 #define _RGBCOLOR_H_
 

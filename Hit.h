@@ -1,9 +1,9 @@
-/* Your Name Here
- * somebody at something dot TLD
- * CS 566
- * September 20XX
+/* Bijan Hamidi & Ruth Obidah
+ * bhamidi@csu.fullerton.edu, ruthobidah@csu.fullerton.edu
+ * CS 599 Independent Study
+ * December 2017
  *
- * $Id: Hit.h 1961 2010-02-24 08:46:53Z mshafae $
+ * $Id: Hit.h 1961 2017-12-05 08:46:53Z mshafae $
  *
  */
 
@@ -16,7 +16,7 @@ using namespace std;
 class Hit{
 public:
 
-	vector<glm::vec3> hits;//possibly not needed
+	vector<glm::vec3> hits; //record of hits
 	
 	glm::vec3 hitPoint;
 	float pixel_i;

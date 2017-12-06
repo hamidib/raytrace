@@ -1,9 +1,9 @@
-/* Your Name Here
- * somebody at something dot TLD
- * CS 484
- * September 2008
+/*Bijan Hamidi & Ruth Obidah
+ * bhamidi@csu.fullerton.edu, ruthobidah@csu.fullerton.edu
+ * CS 599 Independent Study
+ * December 2017
  *
- * $Id: Scene.h 2764 2011-02-09 05:35:16Z mshafae $
+ * $Id: Scene.h 2764 2017-12-05 05:35:16Z mshafae $
  *
  */
 
