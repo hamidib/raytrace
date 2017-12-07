@@ -88,6 +88,15 @@ vector<Ray> rayFactory(const Camera& cam, const Group& g){
     float height = cam._height;
     float pixelSize = cam._pixelSize;
     // The starting point is in camera
+    /*
+    glm::vec3 _up = normalize(cam._up);
+    glm::vec3 _gaze =  normalize(cam._direction);
+    glm::vec3 _right = cross(_up, _gaze);
+    */
+    // The starting point is in camera
+    //cam + up *1/2 height -right*1/2width
+    //glm::vec3 startPT = cam._center + (((height/2.0f))* _up) - (((width/2.0f))*_right);//cam._center + (((height/2.0f) + (pixelSize/2.0f))* _up) - (((width/2.0f) - (pixelSize/2.0f))*_right);
+
     glm::vec3 startPT = glm::vec3(
         cam._center.x - (width/2.0) + (pixelSize/2.0) , 
         cam._center.y + (height/2.0) - (pixelSize/2.0),
