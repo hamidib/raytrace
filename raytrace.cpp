@@ -102,7 +102,7 @@ vector<Ray> rayFactory(const Camera& cam, const Group& g){
                 startPT.z
                 ); 
             // this is the ray factory now
-            Ray r(rayOrigin, cam._direction, int(trunc(i)), int(trunc(j)));
+            Ray r(rayOrigin, normalize(cam._direction), int(trunc(i)), int(trunc(j)));
             //cerr << r << endl;
             //r.write(cerr);
             v.push_back(r);
