@@ -72,18 +72,23 @@ class Scene{
     int i;
     int j;
 		void nextToken( );
-		void parseCamera( Camera &myCam);
+		void parseCamera( /*Camera &myCam*/);
+		void parsePerspectiveCamera( );
 		void nextOnLine( );
 		bool areMoreTokens( );
 		void advance( );
 		void checkToken( const char *str, const char *stage  );
 		void parseBackground( glm::vec3 &myColor);
 		float parseFloat( );
-    double parseDouble( );
+    		double parseDouble( );
 		int parseInt( );
 		// Finish these...
-		void parseMaterials( Material &myMaterial);
+		void parseMaterials( /*Material &myMaterial*/);
+		void parseMaterialsNew( );
 		void parseGroup( Group &myGroup);
+		void parseViewPlane( );
+		void parseLights( );
+		
 };
 
 std::ostream& operator <<( std::ostream &out, const Scene &s );

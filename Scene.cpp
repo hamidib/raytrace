@@ -139,35 +139,36 @@ void Scene::checkToken( const char *str, const char *stage  ){
 		cerr << "Expected \'" << str << "\'" << endl;
 		exit( 1 );
 	}
-}
+} 
 
-void Scene::parseCamera( Camera &myCam){
+void Scene::parseCamera( /*Camera &myCam*/){
 	// You will need to adjust this so that the result 
 	// from parseFloat is stored somewhere meaningful.
 	float vec[3];
-	glm::vec3 center;
-	glm::vec3 direction;
+	glm::vec3 position;
+	glm::vec3 lookAt;
 	glm::vec3  up;
- 	float width, height;
+ 	//float width, height;
 	nextToken( );
 	checkToken( "OrthographicCamera", "Camera" );
 	nextToken( );
 	checkToken( "{", "Camera" );
 	nextToken( );
-	checkToken( "center", "Camera" );
+	checkToken( "position", "Camera" );
 	for( int i = 0; i < 3; i++ ){
 		nextToken( );
 		vec[i] = parseFloat( );
 	}
-	center = glm::vec3(vec[0], vec[1], vec[2]); // center
+	position = glm::vec3(vec[0], vec[1], vec[2]); // center
 
 	nextToken( );
-	checkToken( "direction", "Camera" );
+	checkToken( "lookAt", "Camera" );
 	for( int i = 0; i < 3; i++ ){
 		nextToken( );
 		vec[i] = parseFloat( );
 	}
-	direction = glm::vec3(vec[0], vec[1], vec[2]); // direction
+	lookAt = glm::vec3(vec[0], vec[1], vec[2]); // direction
+	
 	nextToken( );
 	checkToken( "up", "Camera" );
 	for( int i = 0; i < 3; i++ ){
@@ -175,20 +176,120 @@ void Scene::parseCamera( Camera &myCam){
 		vec[i] = parseFloat( );
 	}
 	up = glm::vec3(vec[0], vec[1], vec[2]); //up
-	nextToken( );
-	checkToken( "width", "Camera" );
+	/*nextToken( );
+	checkToken( "}", "Camera" );
 	nextToken( );
 	width = parseInt( ); //width
 
 	nextToken( );
 	checkToken( "height", "Camera" );
 	nextToken( );
-	height = parseInt( ); //height
+	height = parseInt( ); //height */
 	
 	nextToken( );
 	checkToken( "}", "Camera" );
-	Camera c(center, direction, up, width, height);
-	myCam = c;
+	//Camera c(position, lookAt, up);
+	//myCam = c;
+}
+
+void Scene::parseViewPlane( ){
+
+	int width, height, sampleCount;
+	float pixelsize;
+
+	nextToken( );
+	checkToken( "ViewPlane", "ViewPlane" );
+	nextToken( );
+	checkToken( "{", "ViewPlane" );
+	nextToken( );
+	checkToken( "width", "ViewPlane" );
+	nextToken( );
+	width = parseInt( );
+	nextToken( );
+	checkToken( "height", "ViewPlane" );
+	nextToken( );
+	height = parseInt( );
+	nextToken( );
+	checkToken( "pixelsize", "ViewPlane" );
+	nextToken( );
+	pixelsize = parseFloat( );
+	nextToken( );
+	checkToken( "sampleCount", "ViewPlane" );
+	nextToken( );
+	sampleCount = parseInt( );
+	nextToken( );
+	checkToken( "}", "ViewPlane" );
+
+}
+
+void Scene::parseLights( ){
+
+	int numLights, constant_attenuation, linear_attenuation, quadratic_attenuation;
+	glm::vec3 position;
+	glm::vec4 ambientColor, diffuseColor, specularColor;
+	float vec[4];
+
+	nextToken( );
+  	checkToken( "Lights", "Lights" );
+	nextToken( );
+  	checkToken( "{", "Lights" );
+	nextToken( );
+	checkToken( "numLights", "Lights" );
+	nextToken( );
+	numLights = parseInt( );
+	nextToken( );
+	checkToken( "PointLight", "Lights" );
+	nextToken( );
+	checkToken( "{", "Lights" );
+	nextToken( );
+	checkToken( "position", "Lights" );
+	for( int i = 0; i < 3; i++ ){
+		nextToken( );
+		vec[i] = parseFloat( );
+	}
+	position = glm::vec3(vec[0], vec[1], vec[2]);
+
+	nextToken( );
+	checkToken( "ambientColor", "Lights" );
+	for( int i = 0; i < 4; i++ ){
+		nextToken( );
+		vec[i] = parseFloat( );
+	}
+	ambientColor = glm::vec4(vec[0], vec[1], vec[2], vec[3]);
+
+	nextToken( );
+	checkToken( "diffuseColor", "Lights" );
+	for( int i = 0; i < 4; i++ ){
+		nextToken( );
+		vec[i] = parseFloat( );
+	}
+	diffuseColor = glm::vec4(vec[0], vec[1], vec[2], vec[3]);
+
+	nextToken( );
+	checkToken( "specularColor", "Lights" );
+	for( int i = 0; i < 4; i++ ){
+		nextToken( );
+		vec[i] = parseFloat( );
+	}
+	specularColor = glm::vec4(vec[0], vec[1], vec[2], vec[3]);
+
+	nextToken( );
+	checkToken( "constant_attenuation", "Lights" );
+	nextToken( );
+	constant_attenuation = parseInt( );
+	nextToken( );
+	checkToken( "linear_attenuation", "Lights" );
+	nextToken( );
+	linear_attenuation = parseInt( );
+	nextToken( );
+	checkToken( "quadratic_attenuation", "Lights" );
+	nextToken( );
+	quadratic_attenuation = parseInt( );
+
+	nextToken( );
+	checkToken( "}", "Lights" );
+	nextToken( );
+	checkToken( "}", "Lights" );
 }
 
 void Scene::parseBackground(glm::vec3 &myColor){
@@ -214,12 +315,12 @@ void Scene::parseBackground(glm::vec3 &myColor){
 	myColor = color;
 }
 
-void Scene::parseMaterials( Material &myMaterial){
+void Scene::parseMaterials( ){
 	//cerr << "materials not implemented" << endl;
-	float vec[3];
+	float vec[4];
 	vector<RGBcolor*> myColorContainer;
-	glm::vec3 diffuseColor;
-	int numMaterials;
+	glm::vec4 diffuseColor, ambientColor, specularColor;
+	int numMaterials, shininess;
 	nextToken();
 	checkToken("Materials", "Material");
 	nextToken();
@@ -235,28 +336,49 @@ void Scene::parseMaterials( Material &myMaterial){
 		checkToken("PhongMaterial", "Material");
 		nextToken();
 		checkToken("{", "Material");
-
+		
 		nextToken();
-		checkToken("diffuseColor", "Material");
-		for( int i = 0; i < 3; i++ ){
+		checkToken("ambientColor", "Material");
+		for( int i = 0; i < 4; i++ ){
 			nextToken( );
 			vec[i] = parseFloat( );//change later
 		} 
-		diffuseColor = glm::vec3(vec[0], vec[1], vec[2]); //we need to store color in a vector of vector container or array of vecs
-		//or alt do some kind of switch case to assign diffuse color based on index & material index
-		std::cout << "DiffuseColor: " << diffuseColor[0] << " , " << diffuseColor[1] << " , " << diffuseColor[2] << std::endl;
-		myColorContainer.push_back( new RGBcolor (diffuseColor));		
+		ambientColor = glm::vec4(vec[0], vec[1], vec[2], vec[3]); 
+
 		nextToken();
-		checkToken("}", "xMaterial");
+		checkToken("diffuseColor", "Material");
+		for( int i = 0; i < 4; i++ ){
+			nextToken( );
+			vec[i] = parseFloat( );//change later
+		} 
+		diffuseColor = glm::vec4(vec[0], vec[1], vec[2], vec[3]); 
+
+		nextToken();
+		checkToken("specularColor", "Material");
+		for( int i = 0; i < 4; i++ ){
+			nextToken( );
+			vec[i] = parseFloat( );//change later
+		} 
+		specularColor = glm::vec4(vec[0], vec[1], vec[2], vec[3]); 
+
+		nextToken();
+	        checkToken("shininess", "Material");
+		nextToken( );
+		shininess = parseInt( );
+
+		std::cout << "DiffuseColor: " << diffuseColor[0] << " , " << diffuseColor[1] << " , " << diffuseColor[2] << std::endl;
+		myColorContainer.push_back( new RGBcolor (diffuseColor));//later on determine where other material qualities go		
+		nextToken();
+		checkToken("}", "Material");
 	}
 	nextToken();
 	checkToken("}", "Material");
 
 	//myDiffuseColor = diffuseColor;
-	Material m(myColorContainer);//contrainer of objects*
-	myMaterial = m;
+	//Material m(myColorContainer);//contrainer of objects*
+	//myMaterial = m;
 
-}
+} 
 
 void Scene::parseGroup( Group &myGroup){
 	//cerr << "group not implemented" << endl;
@@ -324,6 +446,8 @@ void Scene::parseGroup( Group &myGroup){
 }
 
 
+
+
 bool Scene::parse( Camera &myCam, glm::vec3 &myColor, Material &myMaterial, Group &myGroup){	//pass constructors by reference
 	bool ret = true;
 	lineNumber = 0;
@@ -334,9 +458,11 @@ bool Scene::parse( Camera &myCam, glm::vec3 &myColor, Material &myMaterial, Grou
 		cerr << "Error opening \"" << myInputSceneFile << "\" for reading." << endl;
 		exit( 1 );
 	}
-	parseCamera( myCam);  //call cam const
+	parseCamera( /*myCam*/);  //call cam const
+	parseViewPlane( );
+	parseLights( );
 	parseBackground( myColor);
-	parseMaterials( myMaterial);
+	parseMaterials( /*myMaterial*/);
 	parseGroup( myGroup);
 
 	inputFileStream.close( );
@@ -421,4 +547,5 @@ void Scene::write( std::ostream &out ) const {
 std::ostream& operator <<( std::ostream &out, const Scene &s ){
 	s.write( out );
 	return( out );
-}
+}     
+
