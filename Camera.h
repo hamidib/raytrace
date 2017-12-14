@@ -21,7 +21,7 @@ public:
  
 	Camera(){};
  	Camera(glm::vec3 c, glm::vec3 d, glm::vec3 myup, 
-	float w, float h ): _center(c), direction(d), 
+	float w, float h ): _center(c), _direction(d), 
 	_up(myup){
  	/*center = mycenter; 
  	direction = mydirection;

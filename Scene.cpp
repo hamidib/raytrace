@@ -148,9 +148,24 @@ void Scene::parseCamera( /*Camera &myCam*/){
 	glm::vec3 position;
 	glm::vec3 lookAt;
 	glm::vec3  up;
+	float angleInYDirection;
+	bool isPerspective;
  	//float width, height;
 	nextToken( );
-	checkToken( "OrthographicCamera", "Camera" );
+	//checkToken( "OrthographicCamera", "Camera" );
+	if(std::strcmp("OrthographicCamera", currentToken))
+	{
+		isPerspective = false;
+	}
+	else if (std::strcmp("PerspectiveCamera", currentToken))
+	{
+		isPerspective = true;
+	}
+	else
+	{
+		//Throw Error
+		checkToken( "OrthographicCamera|PerspectiveCamera", "Camera" );
+	}
 	nextToken( );
 	checkToken( "{", "Camera" );
 	nextToken( );
@@ -176,6 +191,14 @@ void Scene::parseCamera( /*Camera &myCam*/){
 		vec[i] = parseFloat( );
 	}
 	up = glm::vec3(vec[0], vec[1], vec[2]); //up
+
+	if(isPerspective)
+	{
+		nextToken( );
+		checkToken( "angleInYDirection", "Camera" );
+		nextToken( );
+		angleInYDirection = parseFloat( ); // In degrees (convert to Radians)
+	}
 	/*nextToken( );
 	checkToken( "}", "Camera" );
 	nextToken( );
