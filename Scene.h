@@ -16,6 +16,7 @@
 #include "Image.h"
 #include "Material.h"
 #include "Group.h"
+#include "ViewPlane.h"
 
 #ifndef _SCENE_H_
 #define _SCENE_H_
@@ -46,7 +47,7 @@ class Scene{
 		bool hasOutputFilePath( );
 		bool hasDepthFilePath( );
 
-		bool parse( Camera &myCam, glm::vec3 &myColor, Material &myMaterial, Group &myGroup);
+		bool parse( Camera &myCam, glm::vec3 &myColor, Material &myMaterial, Group &myGroup, ViewPlane & myViewPlane);
 
 		// I/O
 		void write( std::ostream &out ) const;
@@ -72,7 +73,7 @@ class Scene{
     int i;
     int j;
 		void nextToken( );
-		void parseCamera( /*Camera &myCam*/);
+		void parseCamera( Camera &myCam);
 		void parsePerspectiveCamera( );
 		void nextOnLine( );
 		bool areMoreTokens( );
@@ -83,11 +84,11 @@ class Scene{
     		double parseDouble( );
 		int parseInt( );
 		// Finish these...
-		void parseMaterials( /*Material &myMaterial*/);
+		void parseMaterials( Material &myMaterial);
 		void parseMaterialsNew( );
 		void parseGroup( Group &myGroup);
-		void parseViewPlane( );
-		void parseLights( );
+		void parseViewPlane( ViewPlane &myViewPlane);
+		//void parseLights( );
 		
 };
 
