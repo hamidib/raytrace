@@ -15,13 +15,13 @@
 
 class Camera{
 public:
-	glm::vec3 _position;
- 	glm::vec3 _lookAt;
+	glm::vec3 _center;//_position;
+ 	glm::vec3 _direction;//_lookAt;
  	glm::vec3 _up;
  
 	Camera(){};
- 	Camera(glm::vec3 p, glm::vec3 l, glm::vec3 myup, 
-	float w, float h ): _position(p), _lookAt(l), 
+ 	Camera(glm::vec3 c, glm::vec3 d, glm::vec3 myup, 
+	float w, float h ): _center(c), direction(d), 
 	_up(myup){
  	/*center = mycenter; 
  	direction = mydirection;
@@ -33,8 +33,8 @@ public:
 
   Camera& operator=(Camera& c)
      {
-  	_position = c._center;
-  	_lookAt = c._direction;
+  	_center = c._center;
+  	_direction = c._direction;
   	_up = c._up;
   	return *this;
      }
