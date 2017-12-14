@@ -34,7 +34,7 @@ TARGET = raytrace
 CPPFILES = raytrace.cpp Scene.cpp
 CFILES = getopt_long.c
 # Headers
-HEADERS = Camera.h Group.h Hit.h Image.h Material.hRay.h Scene.h common.h getopt.h RGBcolor.h
+HEADERS = Camera.h Group.h Hit.h Image.h Material.hRay.h Scene.h common.h getopt.h RGBcolor.h PhongMaterial.h ViewPlane.h Lights.h 
 
 
 OBJECTS = $(CPPFILES:.cpp=.o) $(CFILES:.c=.o)

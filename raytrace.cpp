@@ -165,7 +165,7 @@ int main( int argc, char **argv ){
 	string pathStr;
 	gProgramName = argv[0];
 	float myIntercept;
-    float tvalue;
+        float tvalue;
 	Camera myCam;
 	glm::vec3 myColor = glm::vec3(0, 0, 0); // color
 	glm::vec3 myDiffuseColor = glm::vec3(0, 0, 0);

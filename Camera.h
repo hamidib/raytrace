@@ -15,40 +15,36 @@
 
 class Camera{
 public:
-	glm::vec3 _center;
- 	glm::vec3 _direction;
+	glm::vec3 _position;
+ 	glm::vec3 _lookAt;
  	glm::vec3 _up;
- 	int _width, _height;
-  float _pixelSize;
+ 
 	Camera(){};
- 	Camera(glm::vec3 mycenter, glm::vec3 mydirection, glm::vec3 myup, 
-	float w, float h ): _center(mycenter), _direction(mydirection), 
-	_up(myup), _width(w),_height(h) {
+ 	Camera(glm::vec3 p, glm::vec3 l, glm::vec3 myup, 
+	float w, float h ): _position(p), _lookAt(l), 
+	_up(myup){
  	/*center = mycenter; 
  	direction = mydirection;
  	up = myup;
  	width = w;
  	height = h; */
-    _pixelSize = 0.25;
 	};
  ~Camera( ){};
 
   Camera& operator=(Camera& c)
      {
-  	_center = c._center;
-  	_direction = c._direction;
+  	_position = c._center;
+  	_lookAt = c._direction;
   	_up = c._up;
-  	_width = c._width;
-  	_height = c._height;
   	return *this;
      }
-  float pixelWidth( ) const {
+  /*float pixelWidth( ) const {
     return _width / _pixelSize;
      }
 
   float pixelHeight( ) const {
     return _height / _pixelSize;
-     }
+     }*/
 };
 #endif
 
