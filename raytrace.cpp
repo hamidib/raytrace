@@ -193,8 +193,8 @@ int main( int argc, char **argv ){
         
         int rayCount = 0, hit = 0;
         cout << gTheScene->outputFile().c_str() <<endl;
-        PNGImage myImage(gTheScene->outputFile( ).c_str( ), myCam.pixelWidth( ),
-	 myCam.pixelHeight( ));
+        PNGImage myImage(gTheScene->outputFile( ).c_str( ), myViewPlane.pixelWidth( ),
+	 myViewPlane.pixelHeight( ));
         myImage.grayFill(0);
         for(Ray element : myRays) //check rays 
         {

@@ -20,8 +20,7 @@ public:
  	glm::vec3 _up;
  
 	Camera(){};
- 	Camera(glm::vec3 c, glm::vec3 d, glm::vec3 myup, 
-	float w, float h ): _center(c), _direction(d), _up(myup){};
+ 	Camera(glm::vec3 c, glm::vec3 d, glm::vec3 myup): _center(c), _direction(d), _up(myup){};
  ~Camera( ){};
 
   Camera& operator=(Camera& c)

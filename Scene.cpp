@@ -146,19 +146,19 @@ void Scene::parseCamera( Camera &myCam){
 	// You will need to adjust this so that the result 
 	// from parseFloat is stored somewhere meaningful.
 	float vec[3];
-	glm::vec3 position;
-	glm::vec3 lookAt;
+	glm::vec3 center;
+	glm::vec3 direction;
 	glm::vec3  up;
 	float angleInYDirection;
 	bool isPerspective;
  	//float width, height;
 	nextToken( );
 	//checkToken( "OrthographicCamera", "Camera" );
-	if(std::strcmp("OrthographicCamera", currentToken))
+	if(std::strcmp("OrthographicCamera", currentToken) == 0)
 	{
 		isPerspective = false;
 	}
-	else if (std::strcmp("PerspectiveCamera", currentToken))
+	else if (std::strcmp("PerspectiveCamera", currentToken) == 0)
 	{
 		isPerspective = true;
 	}
@@ -170,20 +170,20 @@ void Scene::parseCamera( Camera &myCam){
 	nextToken( );
 	checkToken( "{", "Camera" );
 	nextToken( );
-	checkToken( "position", "Camera" );
+	checkToken( "center", "Camera" );
 	for( int i = 0; i < 3; i++ ){
 		nextToken( );
 		vec[i] = parseFloat( );
 	}
-	position = glm::vec3(vec[0], vec[1], vec[2]); // center
+	center = glm::vec3(vec[0], vec[1], vec[2]); // center
 
 	nextToken( );
-	checkToken( "lookAt", "Camera" );
+	checkToken( "direction", "Camera" );
 	for( int i = 0; i < 3; i++ ){
 		nextToken( );
 		vec[i] = parseFloat( );
 	}
-	lookAt = glm::vec3(vec[0], vec[1], vec[2]); // direction
+	direction = glm::vec3(vec[0], vec[1], vec[2]); // direction
 	
 	nextToken( );
 	checkToken( "up", "Camera" );
@@ -212,7 +212,7 @@ void Scene::parseCamera( Camera &myCam){
 	
 	nextToken( );
 	checkToken( "}", "Camera" );
-	Camera c(position, lookAt, up);
+	Camera c(center, direction, up);
 	myCam = c;
 }
 
@@ -342,12 +342,12 @@ void Scene::parseBackground(glm::vec3 &myColor){
 	myColor = color;
 }
 
-void Scene::parseMaterials( Material & myMaterial){
+void Scene::parseMaterials( Material &myMaterial){
 	//cerr << "materials not implemented" << endl;
-	float vec[4];
+	float vec[3];
 	vector<RGBcolor*> myColorContainer;
-	glm::vec4 diffuseColor, ambientColor, specularColor;
-	int numMaterials, shininess;
+	glm::vec3 diffuseColor;
+	int numMaterials;
 	nextToken();
 	checkToken("Materials", "Material");
 	nextToken();
@@ -363,49 +363,28 @@ void Scene::parseMaterials( Material & myMaterial){
 		checkToken("PhongMaterial", "Material");
 		nextToken();
 		checkToken("{", "Material");
-		
-		nextToken();
-		checkToken("ambientColor", "Material");
-		for( int i = 0; i < 4; i++ ){
-			nextToken( );
-			vec[i] = parseFloat( );//change later
-		} 
-		ambientColor = glm::vec4(vec[0], vec[1], vec[2], vec[3]); 
 
 		nextToken();
 		checkToken("diffuseColor", "Material");
-		for( int i = 0; i < 4; i++ ){
+		for( int i = 0; i < 3; i++ ){
 			nextToken( );
 			vec[i] = parseFloat( );//change later
 		} 
-		diffuseColor = glm::vec4(vec[0], vec[1], vec[2], vec[3]); 
-
-		nextToken();
-		checkToken("specularColor", "Material");
-		for( int i = 0; i < 4; i++ ){
-			nextToken( );
-			vec[i] = parseFloat( );//change later
-		} 
-		specularColor = glm::vec4(vec[0], vec[1], vec[2], vec[3]); 
-
-		nextToken();
-	        checkToken("shininess", "Material");
-		nextToken( );
-		shininess = parseInt( );
-
+		diffuseColor = glm::vec3(vec[0], vec[1], vec[2]); //we need to store color in a vector of vector container or array of vecs
+		//or alt do some kind of switch case to assign diffuse color based on index & material index
 		std::cout << "DiffuseColor: " << diffuseColor[0] << " , " << diffuseColor[1] << " , " << diffuseColor[2] << std::endl;
-		myColorContainer.push_back( new RGBcolor (diffuseColor));//later on determine where other material qualities go		
+		myColorContainer.push_back( new RGBcolor (diffuseColor));		
 		nextToken();
-		checkToken("}", "Material");
+		checkToken("}", "xMaterial");
 	}
 	nextToken();
 	checkToken("}", "Material");
 
-	myDiffuseColor = diffuseColor;
+	//myDiffuseColor = diffuseColor;
 	Material m(myColorContainer);//contrainer of objects*
 	myMaterial = m;
 
-} 
+}
 
 void Scene::parseGroup( Group &myGroup){
 	//cerr << "group not implemented" << endl;
