@@ -13,6 +13,7 @@
 #include "Object.h"
 #include "Sphere.h"
 #include "RGBcolor.h"
+#include "ViewPlane.h"
 //#include <algorithm>
 //#include <vector>
 //#include <iterator>
@@ -141,7 +142,7 @@ void Scene::checkToken( const char *str, const char *stage  ){
 	}
 } 
 
-void Scene::parseCamera( /*Camera &myCam*/){
+void Scene::parseCamera( Camera &myCam){
 	// You will need to adjust this so that the result 
 	// from parseFloat is stored somewhere meaningful.
 	float vec[3];
@@ -211,11 +212,11 @@ void Scene::parseCamera( /*Camera &myCam*/){
 	
 	nextToken( );
 	checkToken( "}", "Camera" );
-	//Camera c(position, lookAt, up);
-	//myCam = c;
+	Camera c(position, lookAt, up);
+	myCam = c;
 }
 
-void Scene::parseViewPlane( ){
+void Scene::parseViewPlane( ViewPlane & myViewPlane){
 
 	int width, height, sampleCount;
 	float pixelsize;
@@ -243,8 +244,11 @@ void Scene::parseViewPlane( ){
 	nextToken( );
 	checkToken( "}", "ViewPlane" );
 
-}
+	ViewPlane v(width, height, pixelsize, sampleCount);
+	myViewPlane = v;
 
+}
+/*
 void Scene::parseLights( ){
 
 	int numLights, constant_attenuation, linear_attenuation, quadratic_attenuation;
@@ -314,7 +318,7 @@ void Scene::parseLights( ){
 	nextToken( );
 	checkToken( "}", "Lights" );
 }
-
+*/
 void Scene::parseBackground(glm::vec3 &myColor){
 	// You will need to adjust this so that the result 
 	// from parseFloat is stored somewhere meaningful.	
@@ -338,7 +342,7 @@ void Scene::parseBackground(glm::vec3 &myColor){
 	myColor = color;
 }
 
-void Scene::parseMaterials( ){
+void Scene::parseMaterials( Material & myMaterial){
 	//cerr << "materials not implemented" << endl;
 	float vec[4];
 	vector<RGBcolor*> myColorContainer;
@@ -397,9 +401,9 @@ void Scene::parseMaterials( ){
 	nextToken();
 	checkToken("}", "Material");
 
-	//myDiffuseColor = diffuseColor;
-	//Material m(myColorContainer);//contrainer of objects*
-	//myMaterial = m;
+	myDiffuseColor = diffuseColor;
+	Material m(myColorContainer);//contrainer of objects*
+	myMaterial = m;
 
 } 
 
@@ -471,7 +475,7 @@ void Scene::parseGroup( Group &myGroup){
 
 
 
-bool Scene::parse( Camera &myCam, glm::vec3 &myColor, Material &myMaterial, Group &myGroup){	//pass constructors by reference
+bool Scene::parse( Camera &myCam, glm::vec3 &myColor, Material &myMaterial, Group &myGroup, ViewPlane & myVP){	//pass constructors by reference
 	bool ret = true;
 	lineNumber = 0;
 	tokenCount = 0;
@@ -481,11 +485,11 @@ bool Scene::parse( Camera &myCam, glm::vec3 &myColor, Material &myMaterial, Grou
 		cerr << "Error opening \"" << myInputSceneFile << "\" for reading." << endl;
 		exit( 1 );
 	}
-	parseCamera( /*myCam*/);  //call cam const
-	parseViewPlane( );
-	parseLights( );
+	parseCamera( myCam);  //call cam const
+	parseViewPlane( myVP);
+	//parseLights( );
 	parseBackground( myColor);
-	parseMaterials( /*myMaterial*/);
+	parseMaterials( myMaterial);
 	parseGroup( myGroup);
 
 	inputFileStream.close( );

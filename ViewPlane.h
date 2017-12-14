@@ -21,7 +21,7 @@ public:
   int _sampleCount; //number of  color samples per pixel
 
 	ViewPlane(){};
- 	ViewPlane(int w, int h, float p ): _width(w), _height(h), _pixelsize(p) {}
+ 	ViewPlane(int w, int h, float p, int c ): _width(w), _height(h), _pixelsize(p), _sampleCount(c) {}
  	/*center = mycenter; 
  	direction = mydirection;
  	up = myup;
@@ -34,11 +34,16 @@ public:
   	_width = v._width;
   	_height = v._height;
 	  _pixelSize = v._pixelSize;
+    _sampleCount = v._sampleCount
   	return *this;
      }
   float pixelWidth( ) const {
     return _width / _pixelSize;
-     }
+  }
+
+  float pixelHeight( ) const {
+    return _height / _pixelSize;
+  }
 
 };
 

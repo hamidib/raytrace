@@ -21,14 +21,7 @@ public:
  
 	Camera(){};
  	Camera(glm::vec3 c, glm::vec3 d, glm::vec3 myup, 
-	float w, float h ): _center(c), _direction(d), 
-	_up(myup){
- 	/*center = mycenter; 
- 	direction = mydirection;
- 	up = myup;
- 	width = w;
- 	height = h; */
-	};
+	float w, float h ): _center(c), _direction(d), _up(myup){};
  ~Camera( ){};
 
   Camera& operator=(Camera& c)
@@ -38,13 +31,7 @@ public:
   	_up = c._up;
   	return *this;
      }
-  /*float pixelWidth( ) const {
-    return _width / _pixelSize;
-     }
 
-  float pixelHeight( ) const {
-    return _height / _pixelSize;
-     }*/
 };
 #endif
 

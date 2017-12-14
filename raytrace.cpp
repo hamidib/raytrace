@@ -17,6 +17,7 @@
 #include "glm/gtx/string_cast.hpp"
 #include "Material.h"
 #include "RGBcolor.h"
+#include "ViewPlane.h"
 
 using namespace std;
 
@@ -82,11 +83,11 @@ void parseCommandLine( int argc, char **argv ){
 	gTheScene = new Scene( inputFile, outputFile, depthFile );
 }
 
-vector<Ray> rayFactory(const Camera& cam, const Group& g){
+vector<Ray> rayFactory(const Camera& cam, const ViewPlane & myViewPlane, const Group& g){
     vector<Ray> v;
-    float width = cam._width;
-    float height = cam._height;
-    float pixelSize = cam._pixelSize;
+    float width = myViewPlane._width;
+    float height = myViewPlane._height;
+    float pixelSize = myViewPlane._pixelSize;
     // The starting point is in camera
     /*
     glm::vec3 _up = normalize(cam._up);
@@ -103,8 +104,8 @@ vector<Ray> rayFactory(const Camera& cam, const Group& g){
         cam._center.z
         );
     cerr << glm::to_string(startPT) << endl;
-    for (float i = 0; i < cam.pixelWidth( ); i++){
-        for (float j = 0; j < cam.pixelHeight( ); j++){
+    for (float i = 0; i < myViewPlane.pixelWidth( ); i++){
+        for (float j = 0; j < myViewPlane.pixelHeight( ); j++){
             glm::vec3 rayOrigin = glm::vec3(
                 startPT.x + i*pixelSize,
                 startPT.x + j*pixelSize,
@@ -167,10 +168,11 @@ int main( int argc, char **argv ){
 	float myIntercept;
         float tvalue;
 	Camera myCam;
+    ViewPlane myViewPlane;
 	glm::vec3 myColor = glm::vec3(0, 0, 0); // color
 	glm::vec3 myDiffuseColor = glm::vec3(0, 0, 0);
 	Group myGroup;
-    	Hit myHits;
+    Hit myHits;
 	Material myMaterial;
 
 	parseCommandLine( argc, argv );
@@ -179,14 +181,13 @@ int main( int argc, char **argv ){
 	if( gTheScene->hasInputSceneFilePath( ) &&
 			gTheScene->hasOutputFilePath( ) &&
 			gTheScene->hasDepthFilePath( ) ){
-		gTheScene->parse( myCam, myColor, myMaterial, myGroup);
+		gTheScene->parse( myCam, myColor, myMaterial, myGroup, myViewPlane);
 		cout << *gTheScene << endl;	
-        myCam._pixelSize = 0.015625;
-        cout << "Pixel size: " << myCam._pixelSize << endl;
-        cout << "Pixel Width & Height: " << myCam.pixelWidth( ) << " " 
-	<< myCam.pixelHeight( ) << endl;
+        cout << "Pixel size: " << myViewPlane._pixelSize << endl;
+        cout << "Pixel Width & Height: " << myViewPlane.pixelWidth( ) << " " 
+	<< myViewPlane.pixelHeight( ) << endl;
 
-        vector<Ray> myRays = rayFactory(myCam, myGroup);
+        vector<Ray> myRays = rayFactory(myCam, myViewPlane, myGroup);
 
         cout << "Number of rays: " << myRays.size( ) << endl;
         
